@@ -46,7 +46,7 @@
 %
 %
 
-function [ lam,t2,et,alphat ] = DWX( T,r,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,mesh,RadMod,kPMod)
+function [ lam,t2,et,alphat ] = DWV( T,r,v2,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,mesh,RadMod,kPMod)
 
     n = size(T,1);
     
@@ -54,10 +54,10 @@ function [ lam,t2,et,alphat ] = DWX( T,r,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,mesh,Ra
    	wallDist = min(y, 2-y);
 
     % Model constants
-    Cl    = 0.1;
-    Cp1   = 2.34;
+    Cl    = 0.28;
+    Cp1   = 2.6;
     Cd1   = 2.0;
-    Cd2   = 0.9;
+    Cd2   = 1.5;
     Ce2   = 1.9;
     siget = 1.0;
     sigt2 = 1.0;
@@ -72,27 +72,27 @@ function [ lam,t2,et,alphat ] = DWX( T,r,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,mesh,Ra
     % Relaxation factors
     underrelaxt2  = 0.8;
     underrelaxet  = 0.8;  
-
+    
     % Time and length scales, eddy diffusivity and turbulent production
     Reps   = (mu.*e).^(1./4)./mu.*wallDist;
     Rturb  = (k.^2)./(mu.*e);
     
     % Model damping functions
-    fd1    = 1 - exp(-(Reps./1.7)).^2;
-    feps   = 1 - 0.3*exp(-(Rturb/6.5).^2);
-    fd2    = (1/Cd2)*(Ce2*feps - 1).*(1 - exp(-Reps./5.8).^2);
+    fd1    = ones(n,1);
+    fd2    = sqrt(v2./k);
     
     % turbulent diffusivity and production
     if RadMod == 1
-        R      = 0.5*(t2./(et + cr11*t2.*(Cr1).*(1-Cr2).*kP).*e./k);
+        R      = 0.5*(t2./(et + cr11*t2.*(Cr1).*(1-Cr2).*kP).*e./k); 
     else
-        R      = 0.5*(t2./et.*e./k);
+        R      = 0.5*(t2./et.*e./k); 
     end
-    fl     = (1 - exp(-Reps./16)).^2.*(1+3./(Rturb.^(3./4)));
+    fl     = 1;
     fl(1:n-1:n) = 0.0;
     
-    alphat = max(r.*Cl.*fl.*k.^2./e.*(2*R).^m,0.0) ;
+    alphat = max(r.*Cl.*v2.*k./e.*(2*R).^m,0.0) ;
     
+      
     Pt  = alphat.*(mesh.ddy*T).^2;
     
     % ---------------------------------------------------------------------
@@ -121,7 +121,7 @@ function [ lam,t2,et,alphat ] = DWX( T,r,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,mesh,Ra
         dt22dy2  = mesh.d2dy2*t2;
         for i=2:n-1
             A(i,i) = A(i,i) - 2*kP(i) * Cr1(i)*(1-Cr2(i)); %...
-            %- kP(i)*dCr1dy(i).*dt22dy2(i).*(1-Cr2(i))./et(i);
+           %- 0.5*kP(i)*dCr1dy(i).*dt22dy2(i).*(1-Cr2(i))./et(i);
         end
     end
     

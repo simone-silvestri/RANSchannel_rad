@@ -26,6 +26,10 @@ function [r,mu,alpha] = calcProp(T,ReT,Pr,casename)
         r  = 1./T;
         mu = (T.^0.7)./ReT;
         alpha = ones(n,1)./ReT./Pr;
+    elseif strcmp(casename,'vardens')
+        r     = 1.5./(T+1.5);
+        mu    = ones(n,1)./ReT;
+        alpha = ones(n,1)./ReT./Pr;
     else
         r     = ones(n,1);
         mu    = ones(n,1)./ReT;

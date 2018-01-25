@@ -62,9 +62,9 @@ turbPrT = 'DWX';
 % -----  choose Radiation model modification -----
 % 0 ...  Conventional t2 - et equations
 % 1 ...  Radiative source term in t2 and et equations
-RadMod = 1;
-% 0 ...  constant kP
-% 1 ...  variable kP
+RadMod = 0;
+% 0 ...  constant rho and kP
+% 1 ...  variable rho and kP
 kPMod  = 0; 
 
 
@@ -87,7 +87,7 @@ underrelaxT = 0.9;
 % 2 ... radiative heat source taken from DNS calculations (radCase)
 solveRad = 2;
 stepRad  = 3;
-radCase  = 'b';
+radCase  = 't20';
 
 % -----  channel height  -----
 height = 2;
@@ -125,7 +125,10 @@ Pl  = 0.03;
 Prt = ones(n,1)*1.0; 
 b_old = -ones(n-2,1)*0.005;
 b = b_old;
-casename = 'constant';
+switch kPMod
+    case 0; casename = 'constant';
+    case 1; casename = 'vardens';
+end
 
 %% ------------------------------------------------------------------------
 %
@@ -188,13 +191,15 @@ if solveRad == 1
     kP = kP';
 elseif solveRad == 2
     QR    = interp1(Dm(:,1),Dm(:,7),MESH.y,'spline');
+    Em    = interp1(Dm(:,1),Dm(:,8),MESH.y,'spline');
+    G     = interp1(Dm(:,1),Dm(:,10),MESH.y,'spline');
     kP    = interp1(Dm(:,1),Dm(:,9),MESH.y,'spline');
-    G     = zeros(n,1);
     qy    = zeros(n,1);
 else
     QR    = zeros(n,1); 
     kP    = interp1(Dm(:,1),Dm(:,9),ANG.y,'spline');
     kP = kP';
+    Em    = zeros(n,1);
     G     = zeros(n,1);
     qy    = zeros(n,1);
 end
@@ -203,7 +208,7 @@ end
 %
 %       Iterate RANS equations
 %
-nmax   = 1000000;   tol  = 1.e-7;  % iteration limits
+nmax   = 1000000;   tol  = 1.e-9;  % iteration limits
 nResid = 50;                       % interval to print residuals
 
 residual = 1e20; residualT = 1e20; residualQ = 1e20; iter = 0;
@@ -230,8 +235,7 @@ while (residual > tol || residualT > tol || residualQ > tol*1e3) && (iter<nmax)
         switch turbPrT
             case 'V2T'; [uT,lam] = V2T(uT,k,e,v2,mu,mut,ReT,Pr,T,MESH);
             case 'PRT'; [lam,Prt] = PRT(lam, mu, mut, Prt, Pr);
-            case 'DWX'; [lam,t2,et,alphat] = DWX( T,r,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,MESH,RadMod,kPMod);
-            case 'DWV'; [lam,t2,et,alphat] = DWV( T,r,v2,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,MESH,RadMod,kPMod);
+            case 'DWX'; [lam,t2,et,alphat] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,MESH,RadMod,kPMod);
             otherwise;  lam = mu./Pr + (mut./0.9);   
         end
         T_old = T;

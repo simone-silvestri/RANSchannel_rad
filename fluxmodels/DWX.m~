@@ -54,7 +54,7 @@
 
 
 
-function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,mesh,RadMod,kPMod)
+function [ lam,t2,et,alphat ] = DWX( T,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,mesh,RadMod,kPMod)
 
     n = size(T,1);
     
@@ -65,15 +65,12 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,
    	wallDist = min(y, 2-y);
     yplus    = wallDist*Retau; 
 
+    
     % Radiative Planck mean absorption coefficient
-    if kPMod == 1
-        A = 1000;
-        cP= [-0.23093, -1.12390*A, 9.41530*A^2, -2.99880*A^3, 0.51382*A^4, -1.8684e-05*A^5];
-        Tr = T*(955-573) + 573;
-        Cr3 = (cP(6).*5./Tr.^6+cP(5)*4./Tr.^5+cP(4)*3./Tr.^4+cP(3)*2./Tr.^3 ...
-            +cP(2)*1./Tr.^2 );
-        Cr3 = -2*(955-573)*Cr3/(ReT*Pr*Pl);
-    end
+    Tr = T*(955-573) + 573;
+    Cr3 = (c(6).*5./Tr.^6+c(5)*4./Tr.^5+c(4)*3./Tr.^4+c(3)*2./Tr.^3...
+    +c(2)*1./Tr.^2 );
+    Cr3 = 2*(955-573)*Cr3/(ReT*Pr*Pl);
     
     % Model constants
     Cl  = 0.09;
@@ -101,18 +98,12 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,
     
     % Model damping functions
     fd1    = 1 - exp(-(Reps./1.7)).^2;
-    feps   = 1 - 0.3*exp(-(Rturb/6.5).^2);
     fw0 = exp( -(Rturb./80) .^2);
     fd2    = (1/Cd2)*(Ce2*feps - 1).*(1 - exp(-Reps./5.8).^2);
     
     % turbulent diffusivity and production
     if RadMod == 1
-        if kPMod == 1
-            er = t2.*(Cr1).*(1-Cr2).*kP - (Em-G).*Cr3.*t2;
-        else
-            er = t2.*(Cr1).*(1-Cr2).*kP;
-        end
-        R = 0.5*(t2./(et + cr11*er).*e./k);
+        R      = 0.5*(t2./(et + cr11*t2.*(Cr1).*(1-Cr2).*kP).*e./k);
     else
         R      = 0.5*(t2./et.*e./k);
     end
@@ -181,15 +172,9 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,
     
     % radiative implicit source modification
     if RadMod == 1
-        if kPMod == 1
-            for i=2:n-1
-                A(i,i) = A(i,i) - 2*kP(i).*Cr1(i).*(1-Cr2(i)) - (Em(i)-G(i)).*Cr3(i);
-            end
-        else
-            for i=2:n-1
-                A(i,i) = A(i,i) - 2*kP(i).*Cr1(i).*(1-Cr2(i));
-            end
-        end 
+        for i=2:n-1
+            A(i,i) = A(i,i) - 2*kP(i).*Cr1(i).*(1-Cr2(i));
+        end
     end  
     
     % right-hand side

@@ -55,9 +55,12 @@ function [k,e,mut] = MK(u,k,e,r,mu,ReT,mesh,compFlag)
     n        = size(r,1);
     y        = mesh.y;
    	wallDist = min(y, 2-y);
-
+    tv       = mesh.ddy*u;
+    ut       = sqrt(tv(1)/r(1));
+    Retau    = ReT*ut;
+    
     if(compFlag==1)
-        yplus = wallDist*ReT.*sqrt(r/r(1))./(mu/mu(1));
+        yplus = wallDist*Retau.*sqrt(r/r(1))./(mu/mu(1));
     else
         yplus = wallDist*ReT;
     end

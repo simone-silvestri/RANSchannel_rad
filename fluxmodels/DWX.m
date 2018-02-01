@@ -82,7 +82,7 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,
     Cd2   = 0.9;
     Ce2   = 1.9;
     siget = 1.0;
-    sigt2 = 5.0;
+    sigt2 = 1.0;
     m     = 0.5;
         
     
@@ -95,25 +95,21 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,
     Cr1  = (16/1.5^4*T.^3 + 48/1.5^3*T.^2 + 48/1.5^2*T + 16/1.5)/(ReT*Pr*Pl); 
     WVN  = (cr33-cr22).*y.^2 - 2*(cr33-cr22).*y +cr33;
     if kPMod == 1
-        Cr2  = kP./WVN.*atan(WVN./kP); 
+        Cr2  = mean(kP)./WVN.*atan(WVN./mean(kP)); 
         Crk  = zeros(n,1); %Cr2.*Cr3.*(Em-G);
     else
         Cr2  = kP./WVN.*atan(WVN./kP);
     end
-    if kPMod == 1
-        cr11 = 0.5;
-        cret = 1;
-    else
-        cr11 = 0.5;
-        cret = 1.0;
-    end
+
+    cr11 = 0.5;
+    cret = 1.0;
     
     % Relaxation factors
     underrelaxt2  = 0.8;
     underrelaxet  = 0.8;  
 
     % Time and length scales, eddy diffusivity and turbulent production
-    Reps   = (mu.*e./r).^(1./4)./mu.*r.*wallDist;
+    Reps   = (mu.*e.*r).^(1./4)./mu./r.*wallDist;
     Rturb  = r.*(k.^2)./(mu.*e);
     
     % Model damping functions

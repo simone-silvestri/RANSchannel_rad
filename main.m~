@@ -57,7 +57,7 @@ turbMod = 'V2F';
 % 'PRT'  ... Myong, H.K. and Kasagi, N., "A new approach to the improvement of
 %           k-epsilon turbulence models for wall bounded shear flow", JSME 
 %           Internationla Journal, 1990.
-turbPrT = 'NO';
+turbPrT = 'DWX';
 
 % -----  choose Radiation model modification -----
 % 0 ...  Conventional t2 - et equations

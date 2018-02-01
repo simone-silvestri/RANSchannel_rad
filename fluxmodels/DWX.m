@@ -54,7 +54,7 @@
 
 
 
-function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,mesh,RadMod,kPMod)
+function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,mesh,RadMod,kPMod,Ck)
 
     n = size(T,1);
     
@@ -68,11 +68,11 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,
     % Radiative Planck mean absorption coefficient
     if kPMod == 1
         A = 1000;
-        cP= [-0.23093, -1.12390*A, 9.41530*A^2, -2.99880*A^3, 0.51382*A^4, -1.8684e-05*A^5];
+        cP= Ck*[-0.23093, -1.12390*A, 9.41530*A^2, -2.99880*A^3, 0.51382*A^4, -1.8684e-05*A^5];
         Tr = T*(955-573) + 573;
         Cr3 = (cP(6).*5./Tr.^6+cP(5)*4./Tr.^5+cP(4)*3./Tr.^4+cP(3)*2./Tr.^3 ...
             +cP(2)*1./Tr.^2 );
-        Cr3 = -2*(955-573)*Cr3/(ReT*Pr*Pl);
+        Cr3 = -(955-573)*Cr3/(ReT*Pr*Pl);
     end
     
     % Model constants
@@ -86,10 +86,10 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,
     m     = 0.5;
         
     % Radiative model functions
-    cr22 = 7.0;
+    cr22 = 7.;
     cr11 = 0.5;
     Cr1  = (16/1.5^4*T.^3 + 48/1.5^3*T.^2 + 48/1.5^2*T + 16/1.5)/(ReT*Pr*Pl); 
-    Cr2  = kP./cr22.*atan(cr22./kP);
+    Cr2  = kP./cr22.*atan(cr22./kP); 
     
     % Relaxation factors
     underrelaxt2  = 0.8;
@@ -102,17 +102,17 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,
     % Model damping functions
     fd1    = 1 - exp(-(Reps./1.7)).^2;
     feps   = 1 - 0.3*exp(-(Rturb/6.5).^2);
-    fw0 = exp( -(Rturb./80) .^2);
+    fw0    = exp( -(Rturb./80) .^2);
     fd2    = (1/Cd2)*(Ce2*feps - 1).*(1 - exp(-Reps./5.8).^2);
     
     % turbulent diffusivity and production
     if RadMod == 1
         if kPMod == 1
-            er = t2.*(Cr1).*(1-Cr2).*kP - (Em-G).*Cr3.*t2;
+            er = t2.*( (1-Cr2).*(Cr1).*kP + (Em-G).*Cr3);
         else
             er = t2.*(Cr1).*(1-Cr2).*kP;
         end
-        R = 0.5*(t2./(et + cr11*er).*e./k);
+        R = 0.5*(t2./(et+cr11*er).*e./k);
     else
         R      = 0.5*(t2./et.*e./k);
     end
@@ -145,13 +145,39 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,
     % Right-hand-side: - Cp1 fp1 sqrt(e et/ (k t2)) Pt
     b = - Cp1*sqrt(e(2:n-1).*et(2:n-1)./k(2:n-1)./t2(2:n-1)).*Pt(2:n-1);
     
+    % A little bit complex for epsilon: (- on A and + on b, so sign is not here)
+    % 
+    % Cr1.*(1-Cr2).*dkPdy*dt2dy + kP.*d(Cr1.*(1-Cr2))dy.*dt2dy +
+    % 2*kP.*Cr1.*(1-Cr2).*et + 
+    % Cr3.*d(Em-G)dy.*dt2dy + (Em-G).*dCr3dy.*dt2dy + 2*(Em-G).*Cr3.*et
+    
+    
     % Radiation implicit source term addition and RHS modification
     if(RadMod == 1)
-        dCr1dy   = mesh.ddy  *Cr1;
-        dt22dy2  = mesh.d2dy2*t2;
-        for i=2:n-1
-            A(i,i) = A(i,i) - 2*kP(i) * Cr1(i)*(1-Cr2(i)); %...
-            %- kP(i)*dCr1dy(i).*dt22dy2(i).*(1-Cr2(i))./et(i);
+        dCRdy   = (1-Cr2).*(mesh.ddy*Cr1)-Cr1.*(mesh.ddy*Cr2);
+        dt2dy   = (mesh.ddy*t2);      
+        for i=1:n
+            if abs(dt2dy(i))>1
+                dt2dy(i) = 0;
+            end
+        end
+        if(kPMod==1)
+            dQdy    = (mesh.ddy*Em)-(mesh.ddy*G);
+            dCr3dy  = (mesh.ddy*Cr3);
+            dkPdy   = (mesh.ddy*kP);
+            for i=2:n-1
+                A(i,i) = A(i,i) - 2*kP(i) * Cr1(i)*(1-Cr2(i))...
+                - 2*(Em(i)-G(i)).*Cr3(i);
+                %b(i-1) = b(i-1) + kP(i)*dCRdy(i).*dt2dy(i)...
+                %+ Cr1(i).*(1-Cr2(i)).*dkPdy(i)*dt2dy(i)...
+                %+ Cr3(i).*dQdy(i).*dt2dy(i)...
+                %+ (Em(i)-G(i)).*dCr3dy(i).*dt2dy(i);
+            end
+        else
+            for i=2:n-1
+                A(i,i) = A(i,i) - 2*kP(i).* Cr1(i)  .*(1-Cr2(i));
+                %b(i-1) = b(i-1) +   kP(i).* dCRdy(i).* dt2dy(i);
+            end
         end
     end
     
@@ -183,7 +209,7 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,
     if RadMod == 1
         if kPMod == 1
             for i=2:n-1
-                A(i,i) = A(i,i) - 2*kP(i).*Cr1(i).*(1-Cr2(i)) - (Em(i)-G(i)).*Cr3(i);
+                A(i,i) = A(i,i) - 2*kP(i).*Cr1(i).*(1-Cr2(i)) - 2*(Em(i)-G(i)).*Cr3(i);
             end
         else
             for i=2:n-1

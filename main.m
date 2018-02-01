@@ -47,7 +47,7 @@ addpath('radiation');           % functions for the radiative calculations
 %           transfer on turbine blades", ASME, J. Turbomach. 2012.
 % 'DNS' ... without turbulence model; k,e,u taken from DNS solution
 % 'NO'  ... without turbulence model; laminar
-turbMod = 'SA';
+turbMod = 'V2F';
 
 % -----  choose flux model  -----
 % '1EQ'... Cess, R.D., "A survery of the literature on heat transfer in 
@@ -57,7 +57,7 @@ turbMod = 'SA';
 % 'PRT'  ... Myong, H.K. and Kasagi, N., "A new approach to the improvement of
 %           k-epsilon turbulence models for wall bounded shear flow", JSME 
 %           Internationla Journal, 1990.
-turbPrT = 'NO';
+turbPrT = 'DWX';
 
 % -----  choose Radiation model modification -----
 % 0 ...  Conventional t2 - et equations
@@ -66,7 +66,7 @@ RadMod = 1;
 % 0 ...  constant rho and kP
 % 1 ...  variable rho and kP
 kPMod  = 0; 
-
+varDens= 0;
 
 % -----  compressible modification  -----
 % 0 ... Conventional models without compressible modifications
@@ -87,7 +87,7 @@ underrelaxT = 0.9;
 % 2 ... radiative heat source taken from DNS calculations (radCase)
 solveRad = 2;
 stepRad  = 3;
-radCase  = 't20';
+radCase  = 't10';
 
 % -----  channel height  -----
 height = 2;
@@ -116,7 +116,7 @@ fact = 6;
 ns = 1;
 
 % -----  Parameter definition
-switch kPMod
+switch varDens
     case 0; ReT = 2900;
     case 1; ReT = 3750;
 end
@@ -125,7 +125,7 @@ Pl  = 0.03;
 Prt = ones(n,1)*1.0; 
 b_old = -ones(n-2,1)*0.005;
 b = b_old;
-switch kPMod
+switch varDens
     case 0; casename = 'constant';
     case 1; casename = 'vardens';
 end
@@ -156,7 +156,7 @@ else
 end
 
 % turbulent scalars
-t2   = 0.1*ones(n,1); t2(1)= 0.0; t2(n)= 0.0;
+t2   = 0.1*ones(n,1); t2(1)= 0.1; t2(n)= 0.1;
 k    = 0.1*ones(n,1); k(1) = 0.0; k(n) = 0.0;
 e    = 0.001*ones(n,1);
 et   = 0.001*ones(n,1);
@@ -197,12 +197,18 @@ elseif solveRad == 2
     qy    = zeros(n,1);
 else
     QR    = zeros(n,1); 
-    kP    = interp1(Dm(:,1),Dm(:,9),ANG.y,'spline');
+    kP    = interp1(Dm(:,1),Dm(:,9),MESH.y,'spline');
     kP = kP';
     Em    = zeros(n,1);
     G     = zeros(n,1);
     qy    = zeros(n,1);
 end
+
+cP= [-0.23093, -1.12390*1e3, 9.41530*1e6, -2.99880*1e9, 0.51382*1e12, -1.8684e-05*1e15];
+Tdns = (955-573)*interp1(Dm(:,1),Dm(:,5),MESH.y,'spline')+573;
+kdns = cP(1) + cP(2)./(Tdns)+cP(3)./(Tdns.^2) + cP(4)./(Tdns.^3) + cP(5)./(Tdns.^4) + cP(6)./(Tdns.^5) ;
+Ck   = mean(kP./kdns);
+
 
 %--------------------------------------------------------------------------
 %
@@ -235,7 +241,7 @@ while (residual > tol || residualT > tol || residualQ > tol*1e3) && (iter<nmax)
         switch turbPrT
             case 'V2T'; [uT,lam] = V2T(uT,k,e,v2,mu,mut,ReT,Pr,T,MESH);
             case 'PRT'; [lam,Prt] = PRT(lam, mu, mut, Prt, Pr);
-            case 'DWX'; [lam,t2,et,alphat] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,MESH,RadMod,kPMod);
+            case 'DWX'; [lam,t2,et,alphat] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,MESH,RadMod,kPMod,Ck);
             otherwise;  lam = mu./Pr + (mut./0.9);   
         end
         T_old = T;

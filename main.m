@@ -65,8 +65,8 @@ turbPrT = 'DWX';
 RadMod = 1;
 % 0 ...  constant rho and kP
 % 1 ...  variable rho and kP
-kPMod  = 0; 
-varDens= 0;
+kPMod  = 1; 
+varDens= 1;
 
 % -----  compressible modification  -----
 % 0 ... Conventional models without compressible modifications
@@ -87,7 +87,7 @@ underrelaxT = 0.9;
 % 2 ... radiative heat source taken from DNS calculations (radCase)
 solveRad = 2;
 stepRad  = 3;
-radCase  = 't10';
+radCase  = 't01r';
 
 % -----  channel height  -----
 height = 2;
@@ -198,17 +198,14 @@ elseif solveRad == 2
 else
     QR    = zeros(n,1); 
     kP    = interp1(Dm(:,1),Dm(:,9),MESH.y,'spline');
-    kP = kP';
     Em    = zeros(n,1);
     G     = zeros(n,1);
     qy    = zeros(n,1);
 end
-
 cP= [-0.23093, -1.12390*1e3, 9.41530*1e6, -2.99880*1e9, 0.51382*1e12, -1.8684e-05*1e15];
 Tdns = (955-573)*interp1(Dm(:,1),Dm(:,5),MESH.y,'spline')+573;
 kdns = cP(1) + cP(2)./(Tdns)+cP(3)./(Tdns.^2) + cP(4)./(Tdns.^3) + cP(5)./(Tdns.^4) + cP(6)./(Tdns.^5) ;
 Ck   = mean(kP./kdns);
-
 
 %--------------------------------------------------------------------------
 %
@@ -317,6 +314,10 @@ while (residual > tol || residualT > tol || residualQ > tol*1e3) && (iter<nmax)
 end
 fprintf('%d\t%12.6e\n\n', iter, residual);
 
+Tdns = (Tdns - 573)./(955-573);
+
+
+fprintf('The residuals with this method is: %12.6e\n\n',norm(T-Tdns));
 
 %% ------------------------------------------------------------------------
 %

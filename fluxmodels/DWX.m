@@ -60,10 +60,10 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,
     
     tv       = mesh.ddy*u/ReT;
     ut       = sqrt(tv(1)/r(1));
-    Retau    = ReT*ut;
+    Retau    = ReT.*ut;
     y        = mesh.y;
    	wallDist = min(y, 2-y);
-    yplus    = wallDist*Retau; 
+    yplus    = wallDist.*Retau; 
 
     % Radiative Planck mean absorption coefficient
     if kPMod == 1
@@ -76,28 +76,45 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,
     end
     
     % Model constants
-    Cl  = 0.09;
+    Cl    = 0.09;
     Cp1   = 2.34;
     Cd1   = 2.0;
     Cd2   = 0.9;
     Ce2   = 1.9;
     siget = 1.0;
-    sigt2 = 1.0;
+    sigt2 = 5.0;
     m     = 0.5;
         
+    
+    % Best results for grey gas (kPMod = 0) ->  Cl = 0.09 cr11 = 0.5      
+    % cret = 1  constant WVN = 7;
+    
     % Radiative model functions
-    cr22 = 7.;
-    cr11 = 0.5;
+    cr22 = 6.5.*ReT/2900;
+    cr33 = 8.5.*ReT/2900;
     Cr1  = (16/1.5^4*T.^3 + 48/1.5^3*T.^2 + 48/1.5^2*T + 16/1.5)/(ReT*Pr*Pl); 
-    Cr2  = kP./cr22.*atan(cr22./kP); 
+    WVN  = (cr33-cr22).*y.^2 - 2*(cr33-cr22).*y +cr33;
+    if kPMod == 1
+        Cr2  = kP./WVN.*atan(WVN./kP); 
+        Crk  = zeros(n,1); %Cr2.*Cr3.*(Em-G);
+    else
+        Cr2  = kP./WVN.*atan(WVN./kP);
+    end
+    if kPMod == 1
+        cr11 = 0.5;
+        cret = 1;
+    else
+        cr11 = 0.5;
+        cret = 1.0;
+    end
     
     % Relaxation factors
     underrelaxt2  = 0.8;
     underrelaxet  = 0.8;  
 
     % Time and length scales, eddy diffusivity and turbulent production
-    Reps   = (mu.*e).^(1./4)./mu.*wallDist;
-    Rturb  = (k.^2)./(mu.*e);
+    Reps   = (mu.*e./r).^(1./4)./mu.*r.*wallDist;
+    Rturb  = r.*(k.^2)./(mu.*e);
     
     % Model damping functions
     fd1    = 1 - exp(-(Reps./1.7)).^2;
@@ -108,19 +125,18 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,
     % turbulent diffusivity and production
     if RadMod == 1
         if kPMod == 1
-            er = t2.*( (1-Cr2).*(Cr1).*kP + (Em-G).*Cr3);
+            er = t2.*( ((1-Cr2).*(Cr1)+Crk).*kP + (Em-G).*Cr3);
         else
             er = t2.*(Cr1).*(1-Cr2).*kP;
         end
-        R = 0.5*(t2./(et+cr11*er).*e./k);
+        R = 0.5*(t2./(cret.*et+cr11.*er).*e./k);
     else
         R      = 0.5*(t2./et.*e./k);
     end
     
     fl  = (fw0.*0.1./(Rturb.^(1./4))) + (1-exp(-yplus/30)).^2;
     fl(1:n-1:n) = 0.0;
-
-    
+   
     alphat = max(r.*Cl.*fl.*k.^2./e.*(2*R).^m,0.0);
     
     Pt  = alphat.*(mesh.ddy*T).^2;
@@ -166,7 +182,7 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,
             dCr3dy  = (mesh.ddy*Cr3);
             dkPdy   = (mesh.ddy*kP);
             for i=2:n-1
-                A(i,i) = A(i,i) - 2*kP(i) * Cr1(i)*(1-Cr2(i))...
+                A(i,i) = A(i,i) - 2*kP(i) * (Cr1(i)*(1-Cr2(i))+Crk(i))...
                 - 2*(Em(i)-G(i)).*Cr3(i);
                 %b(i-1) = b(i-1) + kP(i)*dCRdy(i).*dt2dy(i)...
                 %+ Cr1(i).*(1-Cr2(i)).*dkPdy(i)*dt2dy(i)...
@@ -175,7 +191,8 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,
             end
         else
             for i=2:n-1
-                A(i,i) = A(i,i) - 2*kP(i).* Cr1(i)  .*(1-Cr2(i));
+                A(i,i) = A(i,i)- 2*kP(i).* Cr1(i)  .*(1-Cr2(i));
+                %- kP(i).* dCRdy(i).* dt2dy(i)/et(i);
                 %b(i-1) = b(i-1) +   kP(i).* dCRdy(i).* dt2dy(i);
             end
         end
@@ -209,7 +226,7 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,
     if RadMod == 1
         if kPMod == 1
             for i=2:n-1
-                A(i,i) = A(i,i) - 2*kP(i).*Cr1(i).*(1-Cr2(i)) - 2*(Em(i)-G(i)).*Cr3(i);
+                A(i,i) = A(i,i) - 2*kP(i).*(Cr1(i).*(1-Cr2(i))+Crk(i)) - 2*(Em(i)-G(i)).*Cr3(i);
             end
         else
             for i=2:n-1

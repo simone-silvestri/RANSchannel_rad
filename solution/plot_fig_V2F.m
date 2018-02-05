@@ -7,6 +7,14 @@ clear all
 %% IMPORT DATA
 
 path = 'Figures/';
+
+b_VDN = importdata('V2F-DWX/b');
+b_VN  = importdata('V2F-NO/b');
+b_SN  = importdata('SA-NO/b');
+b_DNS = importdata('DNS/bm');
+f_DNS = importdata('DNS/bf');
+c_DNS = importdata('DNS/bc');
+
 t01_VDR = importdata('V2F-DWX/t01_rad');
 t01_VDN = importdata('V2F-DWX/t01');
 t01_VN  = importdata('V2F-NO/t01');
@@ -51,6 +59,24 @@ y = t01_SN(:,1);
 yd = t01_DNS(1:2:end,1);
 
 %% PLOTTING SECTION
+
+fig=figure();
+plot(yd,b_DNS(1:2:end,5),'ko','MarkerSize',4);
+hold on
+plot(y,b_SN(:,3),'k:');
+plot(y,b_VN(:,3),'k-.');
+plot(y,b_VDN(:,3),'k--');
+set(gca,'FontSize',14);
+xlabel('$$y$$','Interpreter','latex','FontSize',18);
+ylabel('$$T$$','Interpreter','latex','FontSize',18);
+text(1,0.9,'$$\tau=0.1$$','Interpreter','latex','FontSize',18,'HorizontalAlignment','center');
+str1 = 'DNS';
+str2 = 'SA';
+str3 = 'V2F-NO';
+str4 = 'V2F-DW';
+legend({str1,str2,str3,str4},'Interpreter','latex','FontSize',12,'location','south');
+legend boxoff
+print(fig,strcat(path,'Tb.eps'),'-depsc');
 
 fig=figure();
 plot(yd,t01_DNS(1:2:end,5),'ko','MarkerSize',4);
@@ -151,6 +177,24 @@ str5 = 'V2F-DWR';
 legend({str1,str2,str3,str4,str5},'Interpreter','latex','FontSize',12,'location','south');
 legend boxoff
 print(fig,strcat(path,'Tt20.eps'),'-depsc');
+
+fig=figure();
+plot(yd,f_DNS(1:2:end,2),'ko','MarkerSize',4);
+hold on
+plot(y,b_SN(:,9),'k:');
+plot(y,b_VN(:,9),'k-.');
+plot(y,b_VDN(:,9),'k--');
+set(gca,'FontSize',14);
+xlabel('$$y$$','Interpreter','latex','FontSize',18);
+ylabel('$$\overline{v^\prime T^\prime}$$','Interpreter','latex','FontSize',18);
+text(1,f01_DNS(84,2)/2,'$$\tau=0.1$$','Interpreter','latex','FontSize',18,'horizontalalignment','center');
+str1 = 'DNS';
+str2 = 'SA';
+str3 = 'V2F-NO';
+str4 = 'V2F-DW';
+legend({str1,str2,str3,str4},'Interpreter','latex','FontSize',12,'location','northwest');
+legend boxoff
+print(fig,strcat(path,'uTb.eps'),'-depsc');
 
 fig=figure();
 plot(yd,f01_DNS(1:2:end,2),'ko','MarkerSize',4);

@@ -72,7 +72,7 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,
             +cP(2)*1./Tr.^2 );
         Cr3 = -(955-573)*Cr3/(ReT*Pr*Pl);
     else 
-        Cr3 = zeros(n,1)
+        Cr3 = zeros(n,1);
     end
     
     % Model constants
@@ -178,9 +178,9 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,
                 - 2*(Em(i)-G(i)).*Cr3(i);
                 b(i-1) = b(i-1)...
                 + (Em(i)-G(i)).*dCr3dy(i).*dt2dy(i); %...
-%                + Cr3(i).*dQdy(i).*dt2dy(i)...
-%                 + kP(i)*dCRdy(i).*dt2dy(i)...
-%                 + Cr1(i).*(1-Cr2(i)).*dkPdy(i)*dt2dy(i); %...      % derivative of average k
+%                 + kP(i)*dCRdy(i).*dt2dy(i);
+%                + Cr3(i).*dQdy(i).*dt2dy(i); 
+%                + Cr1(i).*(1-Cr2(i)).*dkPdy(i)*dt2dy(i);
             end
         else
             for i=2:n-1

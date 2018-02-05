@@ -120,7 +120,7 @@ switch varDens
     case 0; ReT = 2900;
     case 1; ReT = 3750;
 end
-Pr  = 1;
+Pr  = 1.0;
 Pl  = 0.03;
 Prt = ones(n,1)*1.0; 
 b_old = -ones(n-2,1)*0.005;

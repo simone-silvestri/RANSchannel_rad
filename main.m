@@ -57,7 +57,7 @@ turbMod = 'V2F';
 % 'PRT'  ... Myong, H.K. and Kasagi, N., "A new approach to the improvement of
 %           k-epsilon turbulence models for wall bounded shear flow", JSME 
 %           Internationla Journal, 1990.
-turbPrT = 'NO';
+turbPrT = 'DWX';
 
 % -----  choose Radiation model modification -----
 % 0 ...  Conventional t2 - et equations
@@ -87,7 +87,7 @@ underrelaxT = 0.9;
 % 2 ... radiative heat source taken from DNS calculations (radCase)
 solveRad = 2;
 stepRad  = 3;
-radCase  = 't10r';
+radCase  = 't01r';
 
 % -----  channel height  -----
 height = 2;
@@ -237,7 +237,7 @@ while (residual > tol || residualT > tol || residualQ > tol*1e3) && (iter<nmax)
         % Solve turbulent flux model to calculate eddy diffusivity 
         switch turbPrT
             case 'V2T'; [uT,lam] = V2T(uT,k,e,v2,mu,mut,ReT,Pr,T,MESH);
-            case 'PRT'; [lam,Prt] = PRT(lam, mu, mut, Prt, Pr);
+            case 'PRT'; [lam,Prt] = PRT(mu, mut, Prt, Pr);
             case 'DWX'; [lam,t2,et,alphat] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,MESH,RadMod,kPMod,Ck);
             otherwise;  lam = mu./Pr + (mut./0.9);   
         end
@@ -395,9 +395,9 @@ end
 alphatd = Df(:,2)./(-Df(:,3))/ReT; 
 THF     = alphat.*(-MESH.ddy*T);
 
-figure(2); hold off
-plot(y,u); hold on
-plot(Dm(:,1),Dm(:,4));
+% figure(2); hold off
+% plot(y,u); hold on
+% plot(Dm(:,1),Dm(:,4));
 
 figure(3); hold off
 plot(y,T); hold on

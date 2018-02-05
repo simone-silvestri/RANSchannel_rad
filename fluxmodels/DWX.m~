@@ -74,7 +74,7 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,
     end
     
     % Model constants
-    Cl    = 0.09;
+    Cl    = 0.0085;
     Cp1   = 2.34;
     Cd1   = 2.0;
     Cd2   = 0.9;

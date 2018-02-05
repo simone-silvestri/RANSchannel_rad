@@ -93,7 +93,7 @@ radCase  = 't10r';
 height = 2;
 
 % -----  number of mesh points  -----
-n = 100;
+n = 80;
 % -----  number of angular points  -----
 nT     = 10;                    % number of polar angles
 nP     = 20;                    % number of azimuthal angles
@@ -222,12 +222,12 @@ figure('Position',[50 1000 800 600])
 
 while (residual > tol || residualT > tol || residualQ > tol*1e3) && (iter<nmax)
  
-    if(mod(iter,20)==0)
+    if(mod(iter,10)==0)
         figure(1)
         clf;
         plot(MESH.y,T,Dm(:,1),Dm(:,5));
         figure(2)
-        semilogy(iter/20,residualT,'bo','MarkerSize',6)
+        semilogy(iter,residualT,'o','MarkerSize',4)
         ylim([1e-09 1])
         hold on
         pause(0.00001);

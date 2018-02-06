@@ -57,16 +57,16 @@ turbMod = 'V2F';
 % 'PRT'  ... Myong, H.K. and Kasagi, N., "A new approach to the improvement of
 %           k-epsilon turbulence models for wall bounded shear flow", JSME 
 %           Internationla Journal, 1990.
-turbPrT = 'V2T';
+turbPrT = 'DWX';
 
 % -----  choose Radiation model modification -----
 % 0 ...  Conventional t2 - et equations
 % 1 ...  Radiative source term in t2 and et equations
-RadMod = 0;
+RadMod = 1;
 % 0 ...  constant rho and kP
 % 1 ...  variable rho and kP
-kPMod  = 0; 
-varDens= 0;
+kPMod  = 1; 
+varDens= 1;
 
 % -----  compressible modification  -----
 % 0 ... Conventional models without compressible modifications
@@ -87,7 +87,7 @@ underrelaxT = 0.9;
 % 2 ... radiative heat source taken from DNS calculations (radCase)
 solveRad = 2;
 stepRad  = 3;
-radCase  = 't01';
+radCase  = 't10r';
 
 % -----  channel height  -----
 height = 2;

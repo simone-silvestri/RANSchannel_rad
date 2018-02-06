@@ -15,6 +15,7 @@
 \usepackage{lineno,hyperref}
 \usepackage{verbatim}
 \usepackage{tikz}
+\usepackage[makeroom]{cancel}
 
 \tikzset{math/.style={draw, execute at begin node={$\displaystyle}, execute at end node={$}}}
 
@@ -170,7 +171,7 @@ This wavenumber should take into account the penalty of anisotropicity on the gr
 \end{equation*}
 with $c_{r33}$ and $c_{r22}$ the wavenumber of maximum energy at the walls and in the middle of the channel respectively. 
 
-\begin{figure}[h]
+\begin{figure}[htb]
 \centering
 \includegraphics[width=1.1\textwidth]{fig13.pdf}
 \caption{\noindent RANS simulation with different turbulent heat flux models for different $\tau$ cases}
@@ -180,15 +181,15 @@ with $c_{r33}$ and $c_{r22}$ the wavenumber of maximum energy at the walls and i
 \section*{Modification of the $\tp - \varepsilon_{\theta}$ two equation model}
 From the expressions derived in the previous section it is possible to extend a general $\tp-\varepsilon_{\theta}$ model to fit radiative flows. The two additional equations read:
 \begin{equation}
-\frac{\partial \tp}{\partial t} + \overline{u}_j\frac{\partial \tp}{\partial x_j} = \frac{\partial}{\partial x_j} \lp \alpha \frac{\partial \tp}{\partial x_j} - \overline{u_j^\prime \tr^2} \rp - 2 \overline{u_j^\prime \tr} \frac{\partial \tm}{\partial x_j} - 2 \alpha \overline{\frac{\partial \tr}{\partial x_j}\frac{\partial \tr}{\partial x_j}} - \boxandcomment{X}{Radiative term $\mathcal{R}_{\tp}$}{2 \frac{\alpha}{\lambda}\overline{{(\kappa Q)}^\prime \tr}}
 \label{t2eq}
+\frac{\partial \tp}{\partial t} + \overline{u}_j\frac{\partial \tp}{\partial x_j} = \frac{\partial}{\partial x_j} \lp \alpha \frac{\partial \tp}{\partial x_j} - \overline{u_j^\prime \tr^2} \rp - 2 \overline{u_j^\prime \tr} \frac{\partial \tm}{\partial x_j} - 2 \alpha \overline{\frac{\partial \tr}{\partial x_j}\frac{\partial \tr}{\partial x_j}} - \boxandcomment{X}{Radiative term $\mathcal{R}_{\tp}$}{2 \frac{\alpha}{\lambda}\overline{{(\kappa Q)}^\prime \tr}}
 \end{equation}
 \begin{equation}
+\label{eteq}
 \begin{split}
 \frac{\partial \et}{\partial t} & + \overline{u}_j \frac{\partial \et}{\partial x_j}  =  \frac{\partial}{\partial x_j} \lp \alpha \frac{\partial \et}{\partial x_j} - \overline{u_j^\prime \et}  \rp - 2 \alpha \overline{\frac{\partial \tr}{\partial x_k} \frac{\partial u_j^\prime}{\partial x_k}} \frac{\partial \tm}{\partial x_j} - 2\alpha \overline{u_j^\prime \frac{\partial \tr}{\partial x_k}}\frac{\partial^2 \tm}{\partial x_j \partial x_k} \\
 &- 2\alpha \overline{\frac{\partial \tr}{\partial x_k} \frac{\partial \tr}{\partial x_j}}\frac{\partial \overline{u}_j}{\partial x_k}  - 2 \alpha \overline{\frac{\partial \tr}{\partial x_k} \frac{\partial u_j^\prime}{\partial x_k}\frac{\partial \tr}{\partial x_j}} - 2\overline{{\alpha \frac{\partial^2 \tr}{\partial x_j \partial x_k}}^2} - \boxandcomment{Y}{Radiative term $\mathcal{R}_{\et}$}{2\frac{\alpha}{\lambda} \overline{\frac{\partial {(\kappa Q)}^\prime}{\partial x_k} \frac{\partial \tr}{\partial x_k}}}
 \end{split}
-\label{eteq}
 \end{equation}
 where $\et = \overline{\frac{\partial \tr}{\partial x_j}\frac{\partial \tr}{\partial x_j}}$ and $Q = E_m - G$. \\
 The two equations contain the two additional \enquote{Radiative terms} which are unclosed terms and need to be modelled following the considerations done in the above section regarding $\kappa^\prime, \ E_m^\prime$ and $G^\prime$. Starting from equation (\ref{t2eq}), the additional term reads
@@ -200,6 +201,28 @@ The last two terms on the LHS are third order terms and much smaller than the ot
 \mathcal{R}_{\tp} = 2\frac{\alpha}{\lambda} \lp \overline{\kappa} f_{E_m}(1 - f_G ) + (\overline{E}_m - \overline{G})f_{\kappa} \rp \tp
 \end{equation*}
 If $\kappa$ is constant $f_{\kappa} = 0$.\\
+For equation (\ref{eteq}) the radiative term can be expanded as
+\begin{equation*}
+\mathcal{R}_{\et} = 2\frac{\alpha}{\lambda} \underbrace{ \lp \overline{\frac{\partial \kappa^\prime \overline{Q}}{\partial x_j}\frac{\partial \tr}{\partial x_j}}+\cancelto{\text{\tiny{linearize}}}{\overline{\frac{\partial \kappa^\prime Q^\prime}{\partial x_j}\frac{\partial \tr}{\partial x_j}}}\rp}_{\text{fluctuating }\kappa } + 2\frac{\alpha}{\lambda} \underbrace{ \lp \overline{\frac{\partial \overline{\kappa} Q^\prime}{\partial x_j}\frac{\partial \tr}{\partial x_j}} \rp}_{\text{average } \kappa }  
+\end{equation*}
+\begin{equation*}
+\mathcal{R}_{\et} = 2\frac{\alpha}{\lambda} \lp \overline{\frac{\partial \kappa^\prime}{\partial x_j}\frac{\partial \tr}{\partial x_j}}\overline{Q} +\overline{\kappa^\prime\frac{\partial \tr}{\partial x_j}} \frac{\partial \overline{Q}}{\partial y}\rp + 2\frac{\alpha}{\lambda} \lp \overline{ Q^\prime\frac{\partial \tr}{\partial x_j}}\frac{\partial \overline{\kappa}}{\partial y}  +
+ \overline{\frac{\partial Q^\prime}{\partial x_j}\frac{\partial \tr}{\partial x_j}}\overline{\kappa} \rp  
+\end{equation*}
+By substituting $\kappa^\prime = f_{\kappa} \tr$, $\overline{Q} = \overline{E}_m - \overline{G}$ and $Q^\prime = f_{E_m}(1-f_G) \tr$ we obtain
+
+
+\begin{equation*} 
+\begin{split}
+\overline{\frac{\partial \kappa^\prime}{\partial x_j}\frac{\partial \tr}{\partial x_j}}\overline{Q} & = (\overline{E}_m-\overline{G}) \lp f_{\kappa} \et + \frac{1}{2}\frac{\partial f_{\kappa}}{\partial y}\frac{\partial \tp}{\partial y} \rp \\
+\overline{\kappa^\prime\frac{\partial \tr}{\partial x_j}} \frac{\partial \overline{Q}}{\partial y} & = \frac{\partial (\overline{E}_m - \overline{G})}{\partial y} \frac{f_{\kappa}}{2} \frac{\partial \tp}{\partial y} \\
+\overline{ Q^\prime\frac{\partial \tr}{\partial x_j}}\frac{\partial \overline{\kappa}}{\partial y} & = \frac{\partial \overline{\kappa}}{\partial y} \frac{f_{E_m}(1-f_G)}{2}\frac{\partial \tp}{\partial y}\\
+\overline{\frac{\partial Q^\prime}{\partial x_j}\frac{\partial \tr}{\partial x_j}}\overline{\kappa} & = \overline{\kappa} \lp f_{E_m}(1-f_G) \et + \frac{1}{2}\frac{\partial f_{Em}(1-f_G)}{\partial y} \frac{\partial \tp}{\partial y} \rp
+\end{split}
+\end{equation*}
+
+
+
 
 \noindent Both $\tp$ and $\et$ are required for the calculation of $\alpha_t$ which approximates $\overline{v^\prime \tr}$ as
 \begin{equation*}
@@ -222,7 +245,6 @@ Therefore the new formulation for the eddy diffusivity is
 \begin{equation*}
 \alpha_t = C_{\lambda} f_{\lambda} k \sqrt{\frac{k}{\varepsilon}\frac{\tp}{\et+0.5\mathcal{R}_{\tp}}}
 \end{equation*}
-\newpage 
 \subsection*{Results}
 
 \begin{figure}[h]

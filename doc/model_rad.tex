@@ -14,12 +14,21 @@
 \usepackage{amsbsy}
 \usepackage{lineno,hyperref}
 \usepackage{verbatim}
+\usepackage{tikz}
+
+\tikzset{math/.style={draw, execute at begin node={$\displaystyle}, execute at end node={$}}}
+
+\newcommand{\boxandcomment}[4][]{%
+    \tikz[baseline=(#2.base), remember picture]{%
+        \node[math, label=below:{#3}, #1] (#2) {#4};}}
+
 \newcommand{\norm}[1]{\left\lVert#1\right\rVert}
 \def\lp{\left(}
 \def\rp{\right)}
 \def\tp{\overline{{\theta^\prime}^2}}
 \def\tm{\overline{\theta}}
 \def\tr{{\theta^\prime}}
+\def\et{{\varepsilon_{\theta}}}
 
 \begin{document}
 \section*{Radiative modification to a general $\overline{u_j^\prime \tr}$ model}
@@ -44,7 +53,7 @@ T = \theta \Delta T + T_c \ ,  \ \ \ \ \overline{T} = \tm \Delta T+ T_c \ , \ \ 
 \subsection*{Approximation of $E_m^\prime$}
 It is possible to find the fluctuation of these two quantities by linearizing their analytical expressions, starting from $E_m$
 \begin{equation*}
-E_m^\prime  = E_m - \overline{E_m} = 4 {\lp \frac{\theta}{T_0} + 1\rp }^4 - 4\overline{ {\lp \frac{\theta}{T_0} + 1\rp }^4}
+E_m^\prime  = E_m - \overline{E}_m = 4 {\lp \frac{\theta}{T_0} + 1\rp }^4 - 4\overline{ {\lp \frac{\theta}{T_0} + 1\rp }^4}
 \end{equation*}
 \begin{equation*}
 E_m^\prime  = \frac{4 \theta^4}{T_0^4} + \frac{16 \theta^3}{T_0^3} + \frac{24 \theta^2}{T_0^2} + \frac{16\theta}{T_0}  
@@ -168,15 +177,51 @@ with $c_{r33}$ and $c_{r22}$ the wavenumber of maximum energy at the walls and i
 \label{spectra}
 \end{figure}
 \newpage
-\section*{Modification of the $\tp - \epsilon_{\theta}$ two equation model}
-From the expressions derived in the previous section it is possible to extend a general $\tp-\epsilon_{\theta}$ model to fit radiative flows. The two additional equations read:
+\section*{Modification of the $\tp - \varepsilon_{\theta}$ two equation model}
+From the expressions derived in the previous section it is possible to extend a general $\tp-\varepsilon_{\theta}$ model to fit radiative flows. The two additional equations read:
+\begin{equation}
+\frac{\partial \tp}{\partial t} + \overline{u}_j\frac{\partial \tp}{\partial x_j} = \frac{\partial}{\partial x_j} \lp \alpha \frac{\partial \tp}{\partial x_j} - \overline{u_j^\prime \tr^2} \rp - 2 \overline{u_j^\prime \tr} \frac{\partial \tm}{\partial x_j} - 2 \alpha \overline{\frac{\partial \tr}{\partial x_j}\frac{\partial \tr}{\partial x_j}} - \boxandcomment{X}{Radiative term $\mathcal{R}_{\tp}$}{2 \frac{\alpha}{\lambda}\overline{{(\kappa Q)}^\prime \tr}}
+\label{t2eq}
+\end{equation}
+\begin{equation}
+\begin{split}
+\frac{\partial \et}{\partial t} & + \overline{u}_j \frac{\partial \et}{\partial x_j}  =  \frac{\partial}{\partial x_j} \lp \alpha \frac{\partial \et}{\partial x_j} - \overline{u_j^\prime \et}  \rp - 2 \alpha \overline{\frac{\partial \tr}{\partial x_k} \frac{\partial u_j^\prime}{\partial x_k}} \frac{\partial \tm}{\partial x_j} - 2\alpha \overline{u_j^\prime \frac{\partial \tr}{\partial x_k}}\frac{\partial^2 \tm}{\partial x_j \partial x_k} \\
+&- 2\alpha \overline{\frac{\partial \tr}{\partial x_k} \frac{\partial \tr}{\partial x_j}}\frac{\partial \overline{u}_j}{\partial x_k}  - 2 \alpha \overline{\frac{\partial \tr}{\partial x_k} \frac{\partial u_j^\prime}{\partial x_k}\frac{\partial \tr}{\partial x_j}} - 2\overline{{\alpha \frac{\partial^2 \tr}{\partial x_j \partial x_k}}^2} - \boxandcomment{Y}{Radiative term $\mathcal{R}_{\et}$}{2\frac{\alpha}{\lambda} \overline{\frac{\partial {(\kappa Q)}^\prime}{\partial x_k} \frac{\partial \tr}{\partial x_k}}}
+\end{split}
+\label{eteq}
+\end{equation}
+where $\et = \overline{\frac{\partial \tr}{\partial x_j}\frac{\partial \tr}{\partial x_j}}$ and $Q = E_m - G$. \\
+The two equations contain the two additional \enquote{Radiative terms} which are unclosed terms and need to be modelled following the considerations done in the above section regarding $\kappa^\prime, \ E_m^\prime$ and $G^\prime$. Starting from equation (\ref{t2eq}), the additional term reads
 \begin{equation*}
-\frac{\partial \tp}{\partial t} + \overline{u}_j\frac{\partial \tp}{\partial x_j} = \frac{\partial}{\partial x_j} \lp \alpha \frac{\partial \tp}{\partial x_j} - \overline{u_j^\prime \tr^2} \rp - 2 \overline{u_j^\prime \tr} \frac{\partial \tm}{\partial x_j} - 2 \alpha \overline{\frac{\partial \tr}{\partial x_j}\frac{\partial \tr}{\partial x_j}} - \overline{{(\kappa Q)}^\prime \tr} 
+\mathcal{R}_{\tp} = 2\frac{\alpha}{\lambda} \lp \overline{\kappa} (\overline{E_m^\prime \tr}-\overline{G^\prime \tr}) + (\overline{E}_m - \overline{G})\overline{\kappa^\prime \tr} + \overline{\kappa^\prime E_m^\prime \tr} - \overline{\kappa^\prime G^\prime \tr} \rp
 \end{equation*}
+The last two terms on the LHS are third order terms and much smaller than the others, and a re therefore neglected. Following from the modelling of radiative fluctuations
 \begin{equation*}
-\frac{\partial \tp}{\partial t} + \overline{u}_j\frac{\partial \tp}{\partial x_j} = 
+\mathcal{R}_{\tp} = 2\frac{\alpha}{\lambda} \lp \overline{\kappa} f_{E_m}(1 - f_G ) + (\overline{E}_m - \overline{G})f_{\kappa} \rp \tp
 \end{equation*}
+If $\kappa$ is constant $f_{\kappa} = 0$.\\
 
+\noindent Both $\tp$ and $\et$ are required for the calculation of $\alpha_t$ which approximates $\overline{v^\prime \tr}$ as
+\begin{equation*}
+\overline{v^\prime \tr} = - \alpha_t \frac{\partial \tm}{\partial y}
+\end{equation*}
+In a standard two equation turbulent flux model, $\alpha_t$ is calculated with a damping function $f_{\lambda}$ which takes into account low Reynolds number effects near the walls and a mixed time scale for temperature
+\begin{equation*}
+\alpha_t = C_{\lambda} f_{\lambda} k \sqrt{\frac{k}{\varepsilon}\frac{\tp}{\et}}
+\end{equation*} 
+This because the temperature time scale is calculated as a mix of the velocity time scale $\tau_u= k/\varepsilon$ and the scalar time scale $\tau_s = \tp/\et$. In case of a radiative flow, radiative fluctuations act as a direct dissipation of temperature fluctuation, reducing significantly the scalar time scale. Therefore the new scalar time scale has to account for radiation as
+\begin{equation*}
+\tau_s = \frac{\tp}{\et + \varepsilon_r}
+\end{equation*}
+The new radiative dissipation in a strict sense is the dissipation part of the radiative term, which can be decomposed as
+\begin{equation*}
+\mathcal{R}_{\tp} = 2 \lp \underbrace{\frac{\partial \overline{q_{ry}^\prime \tr}}{\partial y}}_{\phi_r} - \underbrace{\overline{q_{rj}^\prime\frac{\partial \tr}{\partial x_j}}}_{\varepsilon_r} \rp
+\end{equation*}
+On the other hand, in the center of the channel $\varepsilon_r \gg \phi_r$, therefore it is possible to assume $\varepsilon \approx 0.5 \mathcal{R}_{\tp}$.
+Therefore the new formulation for the eddy diffusivity is
+\begin{equation*}
+\alpha_t = C_{\lambda} f_{\lambda} k \sqrt{\frac{k}{\varepsilon}\frac{\tp}{\et+0.5\mathcal{R}_{\tp}}}
+\end{equation*}
 \newpage 
 \subsection*{Results}
 

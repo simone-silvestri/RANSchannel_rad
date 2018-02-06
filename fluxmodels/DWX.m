@@ -90,8 +90,8 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,
     % cret = 1  constant WVN = 7;
     
     % Radiative model functions
-    cr22 = 6.5.*ReT*Pr/2900;
-    cr33 = 8.5.*ReT*Pr/2900;
+    cr22 = 6.5.*ReT/2900*Pr; %./r.^(1./4);
+    cr33 = 8.5.*ReT/2900*Pr; %./r.^(1./4);
     Cr1  = (16/1.5^4*T.^3 + 48/1.5^3*T.^2 + 48/1.5^2*T + 16/1.5)/(ReT*Pr*Pl); 
     WVN  = ((cr33-cr22).*y.^2 - 2*(cr33-cr22).*y +cr33);
 

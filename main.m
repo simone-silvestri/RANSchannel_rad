@@ -57,7 +57,7 @@ turbMod = 'V2F';
 % 'PRT'  ... Myong, H.K. and Kasagi, N., "A new approach to the improvement of
 %           k-epsilon turbulence models for wall bounded shear flow", JSME 
 %           Internationla Journal, 1990.
-turbPrT = 'DWX';
+turbPrT = 'PRT';
 
 % -----  choose Radiation model modification -----
 % 0 ...  Conventional t2 - et equations
@@ -194,7 +194,8 @@ elseif solveRad == 2
     Em    = interp1(Dm(:,1),Dm(:,8),MESH.y,'spline');
     G     = interp1(Dm(:,1),Dm(:,10),MESH.y,'spline');
     kP    = interp1(Dm(:,1),Dm(:,9),MESH.y,'spline');
-    qy    = zeros(n,1);
+    qy    = interp1(Df(:,1),Df(:,2),MESH.y,'spline')...
+          - interp1(Df(:,1),Df(:,3),MESH.y,'spline');
 else
     QR    = zeros(n,1); 
     kP    = interp1(Dm(:,1),Dm(:,9),MESH.y,'spline');
@@ -252,7 +253,7 @@ while (residual > tol || residualT > tol || residualQ > tol*1e3) && (iter<nmax)
         % Solve turbulent flux model to calculate eddy diffusivity 
         switch turbPrT
             case 'V2T'; [uT,lam] = V2T(uT,k,e,v2,mu,mut,ReT,Pr,T,MESH);
-            case 'PRT'; [lam,Prt] = PRT(mu, mut, Prt, Pr);
+            case 'PRT'; [lam,alphat] = PRT( mu,mut,alpha,T,r,qy,ReT,MESH,RadMod);
             case 'DWX'; [lam,t2,et,alphat] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,MESH,RadMod,kPMod,Ck);
             otherwise;  lam = mu./Pr + (mut./0.9);   
         end
@@ -430,14 +431,9 @@ plot(Df(:,1),alphatd);
 % plotting the DNS profiles
 % 
 
-
-if strcmp(turbPrT,'DWX')
-    switch RadMod
-        case 1;   string = strcat('solution/',turbMod,'-',turbPrT,'/',radCase,'_','rad'); 
-        case 0;   string = strcat('solution/',turbMod,'-',turbPrT,'/',radCase); 
-    end
-else
-   string = strcat('solution/',turbMod,'-',turbPrT,'/',radCase);    
+switch RadMod
+    case 1;   string = strcat('solution/',turbMod,'-',turbPrT,'/',radCase,'_','rad'); 
+    case 0;   string = strcat('solution/',turbMod,'-',turbPrT,'/',radCase); 
 end
         
 fid = fopen(string,'w');

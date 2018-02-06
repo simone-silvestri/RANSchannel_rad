@@ -14,7 +14,7 @@
 \usepackage{amsbsy}
 \usepackage{lineno,hyperref}
 \usepackage{verbatim}
-
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
 \def\lp{\left(}
 \def\rp{\right)}
 \def\tp{\overline{{\theta^\prime}^2}}
@@ -22,7 +22,7 @@
 \def\tr{{\theta^\prime}}
 
 \begin{document}
-\section*{Radiative modification to a general $\tp - \epsilon_{\theta}$ model}
+\section*{Radiative modification to a general $\overline{u_j^\prime \tr}$ model}
 \vspace{1cm}
 Quantities requiring modeling:
 
@@ -135,7 +135,50 @@ where
 f_{\kappa} =  - \lp c_1  \frac{\Delta T}{\overline{T}^2} + c_2  \frac{2\Delta T}{\overline{T}^3} + c_3  \frac{3\Delta T}{\overline{T}^4} +  c_4  \frac{4\Delta T}{\overline{T}^4} +  c_5  \frac{5\Delta T}{\overline{T}^6} \rp
 \end{equation*}
 \subsection*{Approximation of $G^\prime$}
-This is the most complex part of the modeling and 
+This is the most complex part of the modeling and requires the knowledge of the spectral wavenumbers of the non-radiative channel flow. It is possible to know only the spectral dependency of the incident radiation fluctuations, and in homogeneous isotropic turbulence for grey gas is
+\begin{equation*}
+\widehat{G^\prime} = \frac{\kappa}{\omega} \text{atan}\lp\frac{\omega}{\kappa} \rp \widehat{E_m^\prime} \ .
+\end{equation*} 
+From this it is already possible to state, following from the previous considerations on $E_m^\prime$, that
+\begin{equation*}
+\widehat{G^\prime} \approx \frac{\kappa}{\omega} \text{atan}\lp\frac{\omega}{\kappa} \rp f_{E_m} \widehat{\tr} \ .
+\end{equation*}
+The above equation states that the modes of $G^\prime$ are connected to the modes of $\tr$ depending on the wavenumber and on the absorption coefficient. This means that the higher the absorption coefficient the stronger $G^\prime$ gets and always on smaller $\omega$. It is possible to translate this proportionality to physical space if there is the knowledge of a charateristic wavenumber for which it is possible to write
+\begin{equation*}
+G^\prime \approx f_G f_{E_m} \theta^\prime
+\end{equation*}
+where 
+\begin{equation*}
+f_G = \frac{\kappa}{\omega_c} \text{atan}\lp\frac{\omega_c}{\kappa} \rp
+\end{equation*}
+and $\omega_c$ is a charateristic wavenumber that represents the integral wavenumber weighted on the energy spectrum at a certain $y-$location calculated as
+\begin{equation*}
+\omega_c = {\norm{\int_{0}^{\infty} \boldsymbol{\omega^\prime} E_{\theta}(\boldsymbol{\omega^\prime}) d \boldsymbol{\omega^\prime} / \int_0^{\infty} E_{\theta}(\boldsymbol{\omega^\prime}) d \boldsymbol{\omega^\prime}}}_2
+\end{equation*}
+This wavenumber should take into account the penalty of anisotropicity on the growth of $G^\prime$, i.e. there should be weights in the norm that promote the spectral direction which contains energy at the largest wavenumbers since radiative energy will most likely escape from those directions. For the present case, with DNS knowledge of the spectral redistribution of energy in the channel, it is identified that the spanwise spectral wavenumber is dominant over the streamwise (i.e., energy at larger wavenumbers) and we assume that the wall normal direction contains energy at the same wavenumbers that the spawise direction. Therefore, following the spectral energy redistribution noticed in figure \ref{spectra}, it is possible to approximate the charateristic wavenumber as a parabola (shape of energy redistribution in spanwise direction) as
+\begin{equation*}
+\omega_c = (c_{r33} - c_{r22}) y^2 - 2(c_{r33} - c_{r22})y +c_{r33} \ ,
+\end{equation*}
+with $c_{r33}$ and $c_{r22}$ the wavenumber of maximum energy at the walls and in the middle of the channel respectively. 
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=1.1\textwidth]{fig13.pdf}
+\caption{\noindent RANS simulation with different turbulent heat flux models for different $\tau$ cases}
+\label{spectra}
+\end{figure}
+\newpage
+\section*{Modification of the $\tp - \epsilon_{\theta}$ two equation model}
+From the expressions derived in the previous section it is possible to extend a general $\tp-\epsilon_{\theta}$ model to fit radiative flows. The two additional equations read:
+\begin{equation*}
+\frac{\partial \tp}{\partial t} + \overline{u}_j\frac{\partial \tp}{\partial x_j} = \frac{\partial}{\partial x_j} \lp \alpha \frac{\partial \tp}{\partial x_j} - \overline{u_j^\prime \tr^2} \rp - 2 \overline{u_j^\prime \tr} \frac{\partial \tm}{\partial x_j} - 2 \alpha \overline{\frac{\partial \tr}{\partial x_j}\frac{\partial \tr}{\partial x_j}} - \overline{{(\kappa Q)}^\prime \tr} 
+\end{equation*}
+\begin{equation*}
+\frac{\partial \tp}{\partial t} + \overline{u}_j\frac{\partial \tp}{\partial x_j} = 
+\end{equation*}
+
+\newpage 
+\subsection*{Results}
 
 \begin{figure}[h]
 \centering

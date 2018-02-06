@@ -35,19 +35,29 @@
 %   uT          turbulent heat flux
 %   Prt         turbulent Prandtl number
 
-function [ uT, lam ] = V2T(uT,k,e,v2,mu,mut,ReT,Pr,T,mesh)
+function [ uT, lam ] = V2T(uT,k,e,v2,mu,ReT,Pr,Pl,T,kP,mesh,RadMod)
 
 
     n = size(T,1);
     lam = mu./Pr; % + mut./0.9;   
-
+    y = mesh.y;
     underrelaxuT = 0.8;
     cs0 = 0.11;
     c10 = 4.0;
     
     Ret = k.^2./(mu.*e);
     fw = exp(-(Ret./80).^2);
+        
+    % Best results for grey gas (kPMod = 0) ->  Cl = 0.09 cr11 = 0.5      
+    % cret = 1  constant WVN = 7;
     
+    % Radiative model functions
+    cr22 = 6.5.*ReT/2900*Pr; %./r.^(1./4);
+    cr33 = 8.5.*ReT/2900*Pr; %./r.^(1./4);
+    Cr1  = (16/1.5^4*T.^3 + 48/1.5^3*T.^2 + 48/1.5^2*T + 16/1.5)/(ReT*Pr*Pl); 
+    WVN  = ((cr33-cr22).*y.^2 - 2*(cr33-cr22).*y +cr33);
+    Cr2  = mean(kP)./WVN.*atan(WVN./mean(kP));
+
     %Production and diffusion terms (diffusion implicit)
     Pt = v2.* (mesh.ddy*T);
     a  = cs0 * 2.0 * k.*v2./e + 1/ReT + 1./3.*(1-Pr)./ReT./Pr; 
@@ -64,6 +74,12 @@ function [ uT, lam ] = V2T(uT,k,e,v2,mu,mut,ReT,Pr,T,mesh)
     % implementation of pressure term
     for i=2:n-1
         A(i,i) = A(i,i) + (c10*(fw(i)-1)-fw(i)) * e(i)/k(i);
+    end
+    % Addition of radiative terms
+    if RadMod == 1
+        for i=2:n-1
+            A(i,i) = A(i,i) - kP(i).*Cr1(i).*(1-Cr2(i));
+        end
     end
     b = Pt(2:n-1);
    

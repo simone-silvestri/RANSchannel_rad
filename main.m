@@ -57,16 +57,16 @@ turbMod = 'V2F';
 % 'PRT'  ... Myong, H.K. and Kasagi, N., "A new approach to the improvement of
 %           k-epsilon turbulence models for wall bounded shear flow", JSME 
 %           Internationla Journal, 1990.
-turbPrT = 'DWX';
+turbPrT = 'V2T';
 
 % -----  choose Radiation model modification -----
 % 0 ...  Conventional t2 - et equations
 % 1 ...  Radiative source term in t2 and et equations
-RadMod = 1;
+RadMod = 0;
 % 0 ...  constant rho and kP
 % 1 ...  variable rho and kP
-kPMod  = 1; 
-varDens= 1;
+kPMod  = 0; 
+varDens= 0;
 
 % -----  compressible modification  -----
 % 0 ... Conventional models without compressible modifications
@@ -87,7 +87,7 @@ underrelaxT = 0.9;
 % 2 ... radiative heat source taken from DNS calculations (radCase)
 solveRad = 2;
 stepRad  = 3;
-radCase  = 't10r';
+radCase  = 't01';
 
 % -----  channel height  -----
 height = 2;
@@ -252,7 +252,7 @@ while (residual > tol || residualT > tol || residualQ > tol*1e3) && (iter<nmax)
         end
         % Solve turbulent flux model to calculate eddy diffusivity 
         switch turbPrT
-            case 'V2T'; [uT,lam] = V2T(uT,k,e,v2,mu,mut,ReT,Pr,T,MESH);
+            case 'V2T'; [uT,lam] = V2T(uT,k,e,v2,mu,ReT,Pr,Pl,T,kP,MESH,RadMod);
             case 'PRT'; [lam,alphat] = PRT( mu,mut,alpha,T,r,qy,ReT,MESH,RadMod);
             case 'DWX'; [lam,t2,et,alphat] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,MESH,RadMod,kPMod,Ck);
             otherwise;  lam = mu./Pr + (mut./0.9);   
@@ -409,7 +409,11 @@ if strcmp(turbPrT,'NO')
     alphat = mut./0.9;
 end
 alphatd = Df(:,2)./(-Df(:,3))/ReT; 
+
 THF     = alphat.*(-MESH.ddy*T);
+if strcmp(turbPrT,'V2T')
+    THF = uT;
+end
 
 % figure(2); hold off
 % plot(y,u); hold on

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.8.23)  6 FEB 2018 16:28
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.8.23)  7 FEB 2018 13:06
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -776,64 +776,61 @@ LaTeX Info: Redefining \nameref on input line 34.
 Non-PDF special ignored!
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-[2] <fig13.pdf, id=33, 389.455pt x 464.73625pt>
-File: fig13.pdf Graphic file (type pdf)
- <use fig13.pdf>
-Package pdftex.def Info: fig13.pdf used on input line 176.
-(pdftex.def)             Requested size: 531.75632pt x 634.56453pt.
+[2]
 
-Overfull \hbox (48.34416pt too wide) in paragraph at lines 176--177
- [][] 
- []
+LaTeX Warning: Reference `spectra' on page 3 undefined on input line 170.
+
+[3] [4]
+
+LaTeX Warning: Reference `t2eq' on page 5 undefined on input line 199.
 
 
-LaTeX Warning: Float too large for page by 20.02913pt on input line 179.
+LaTeX Warning: Reference `eteq' on page 5 undefined on input line 208.
 
-[3]
+[5]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 259.
 
-LaTeX Warning: Reference `t2eq' on page 4 undefined on input line 195.
-
-
-LaTeX Warning: Reference `eteq' on page 4 undefined on input line 204.
-
-[4] <../solution/Figures/Tempgrey.pdf, id=52, 833.1125pt x 504.88625pt>
+ (/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 259.
+ [6]
+<../solution/Figures/Tempgrey.pdf, id=61, 833.1125pt x 504.88625pt>
 File: ../solution/Figures/Tempgrey.pdf Graphic file (type pdf)
 
 <use ../solution/Figures/Tempgrey.pdf>
-Package pdftex.def Info: ../solution/Figures/Tempgrey.pdf used on input line 25
-2.
+Package pdftex.def Info: ../solution/Figures/Tempgrey.pdf used on input line 27
+3.
 (pdftex.def)             Requested size: 531.75632pt x 322.27095pt.
 
-Overfull \hbox (48.34416pt too wide) in paragraph at lines 252--253
+Overfull \hbox (48.34416pt too wide) in paragraph at lines 273--274
  [][] 
  []
 
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-<../solution/Figures_r/Tempvar.pdf, id=53, 833.1125pt x 304.13625pt>
+<../solution/Figures_r/Tempvar.pdf, id=62, 833.1125pt x 304.13625pt>
 File: ../solution/Figures_r/Tempvar.pdf Graphic file (type pdf)
 
 <use ../solution/Figures_r/Tempvar.pdf>
 Package pdftex.def Info: ../solution/Figures_r/Tempvar.pdf used on input line 2
-59.
+80.
 (pdftex.def)             Requested size: 531.75632pt x 194.13141pt.
 
-Overfull \hbox (48.34416pt too wide) in paragraph at lines 259--260
+Overfull \hbox (48.34416pt too wide) in paragraph at lines 280--281
  [][] 
  []
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[5]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 265.
- [6 <./fig13.pdf>] [7 <../solution/Figures/Tempgrey.pdf> <../solution/Figures_r
-/Tempvar.pdf>]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 265.
- (./model_rad.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 265.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 265.
+[7 <../solution/Figures/Tempgrey.pdf>]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 286.
+ [8 <../solution/Figures_r/Tempvar.pdf>]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 286.
+
+(./model_rad.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 286.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 286.
 Package rerunfilecheck Info: File `model_rad.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
 
@@ -842,13 +839,13 @@ LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 19253 strings out of 493029
- 357751 string characters out of 6136234
+ 19266 strings out of 493029
+ 357987 string characters out of 6136234
  470706 words of memory out of 5000000
- 22435 multiletter control sequences out of 15000+600000
+ 22445 multiletter control sequences out of 15000+600000
  12118 words of font info for 44 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 55i,22n,54p,885b,733s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 55i,22n,54p,882b,733s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmbsy7.pfb
 ></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr
 /share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share
@@ -856,23 +853,20 @@ Here is how much of TeX's memory you used:
 ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/tex
 mf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/texmf-dis
 t/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texlive/texmf-dist/fonts
-/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texmf-dist/fonts/type1/
-public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/
-amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
-s/cm/cmmi9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
-mib10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.p
-fb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr
-/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/t
-exlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/share/texlive/t
-exmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-d
-ist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/share/texlive/texmf-dist/fon
-ts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type
-1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/publi
-c/amsfonts/latxfont/line10.pfb>
-Output written on model_rad.pdf (7 pages, 1187717 bytes).
+/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/
+public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/
+amsfonts/cm/cmmib10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfo
+nts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmr5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb
+></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr
+/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/share/
+texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-
+dist/fonts/type1/public/amsfonts/latxfont/line10.pfb>
+Output written on model_rad.pdf (8 pages, 412175 bytes).
 PDF statistics:
- 159 PDF objects out of 1000 (max. 8388607)
- 122 compressed objects within 2 object streams
- 19 named destinations out of 1000 (max. 500000)
- 28 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 142 PDF objects out of 1000 (max. 8388607)
+ 110 compressed objects within 2 object streams
+ 20 named destinations out of 1000 (max. 500000)
+ 23 words of extra memory for PDF output out of 10000 (max. 10000000)
 

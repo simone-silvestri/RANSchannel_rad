@@ -35,25 +35,25 @@
 %   uT          turbulent heat flux
 %   Prt         turbulent Prandtl number
 
-function [ uT, lam ] = V2T(uT,k,e,v2,mu,ReT,Pr,Pl,T,kP,mesh,RadMod)
+function [ uT, lam ] = V2T(uT,k,e,v2,mu,ReT,Pr,Pl,T,kP,r,mesh,RadMod)
 
 
     n = size(T,1);
     lam = mu./Pr; % + mut./0.9;   
     y = mesh.y;
     underrelaxuT = 0.8;
-    cs0 = 0.11;
+    cs0 = 0.10;
     c10 = 4.0;
     
-    Ret = k.^2./(mu.*e);
+    Ret = r.*k.^2./(mu.*e);
     fw = exp(-(Ret./80).^2);
         
     % Best results for grey gas (kPMod = 0) ->  Cl = 0.09 cr11 = 0.5      
     % cret = 1  constant WVN = 7;
     
     % Radiative model functions
-    cr22 = 6.5.*ReT/2900*Pr; %./r.^(1./4);
-    cr33 = 8.5.*ReT/2900*Pr; %./r.^(1./4);
+    cr22 = 6.5.*ReT/2900.*(Pr); %./r.^(1./4);
+    cr33 = 8.5.*ReT/2900.*(Pr); %./r.^(1./4);
     Cr1  = (16/1.5^4*T.^3 + 48/1.5^3*T.^2 + 48/1.5^2*T + 16/1.5)/(ReT*Pr*Pl); 
     WVN  = ((cr33-cr22).*y.^2 - 2*(cr33-cr22).*y +cr33);
     Cr2  = mean(kP)./WVN.*atan(WVN./mean(kP));

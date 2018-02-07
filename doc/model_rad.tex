@@ -34,7 +34,8 @@
 \begin{document}
 \section*{Radiative modification to a general $\overline{u_j^\prime \tr}$ model}
 \vspace{1cm}
-Quantities requiring modeling:
+Radiative heat transfer modifies intrinsically the turbulent temperature field, modifying the mechanism of turbulent heat transfer (TRI). This leads to an average temperature profile that cannot be predicted with standard models. Therefore, hereby we extend a classical two equation model (temperature variance - dissipation of temperature variance) to account for TRI. The two equation model is chosen because of its simplicity and reliability but the general guidelines laid down in this first section are general and applicable to any turbulent heat flux model. \\
+TRI is driven by the the appearence of a fluctuating radiative field, therefore the quantities requiring modeling are:
 
 \begin{equation*}
 \kappa^\prime \ , \ \ \ E_m^\prime \ , \ \ \ G^\prime \ .
@@ -112,7 +113,7 @@ Therefore
 \begin{equation*}
 \overline{\kappa} \approx c_0 + \frac{c_1}{\overline{T}} + \frac{c_2}{\overline{T^2}} + \frac{c_3}{\overline{T^3}} + \frac{c_4}{\overline{T^4}} + \frac{c_5}{\overline{T^5}} \ .
 \end{equation*}
-To calculate $\kappa^\prime$ we start from the second term on the LHS ($c_0 - c_0 = 0$)
+To calculate $\kappa^\prime$ we start from the second term on the LHS
 \begin{equation*}
 c_1 \lp \frac{1}{T} - \frac{1}{\overline{T}} \rp = c_1 \lp \frac{\overline{T} - T}{T\overline{T}} \rp \ .
 \end{equation*}
@@ -142,8 +143,9 @@ And therefore we found an expression for $\kappa^\prime$ as
 \end{equation*}
 where
 \begin{equation*}
-f_{\kappa} =  - \lp c_1  \frac{\Delta T}{\overline{T}^2} + c_2  \frac{2\Delta T}{\overline{T}^3} + c_3  \frac{3\Delta T}{\overline{T}^4} +  c_4  \frac{4\Delta T}{\overline{T}^4} +  c_5  \frac{5\Delta T}{\overline{T}^6} \rp
+f_{\kappa} =  - \lp c_1  \frac{\Delta T}{\overline{T}^2} + c_2  \frac{2\Delta T}{\overline{T}^3} + c_3  \frac{3\Delta T}{\overline{T}^4} +  c_4  \frac{4\Delta T}{\overline{T}^4} +  c_5  \frac{5\Delta T}{\overline{T}^6} \rp \ .
 \end{equation*}
+Of course if $\kappa$ is another function of temperature the expression of $f_{\kappa}$ will have to be adapted.
 \subsection*{Approximation of $G^\prime$}
 This is the most complex part of the modeling and requires the knowledge of the spectral wavenumbers of the non-radiative channel flow. It is possible to know only the spectral dependency of the incident radiation fluctuations, and in homogeneous isotropic turbulence for grey gas is
 \begin{equation*}
@@ -171,12 +173,14 @@ This wavenumber should take into account the penalty of anisotropicity on the gr
 \end{equation*}
 with $c_{r33}$ and $c_{r22}$ the wavenumber of maximum energy at the walls and in the middle of the channel respectively. 
 
-\begin{figure}[htb]
-\centering
-\includegraphics[width=1.1\textwidth]{fig13.pdf}
-\caption{\noindent RANS simulation with different turbulent heat flux models for different $\tau$ cases}
-\label{spectra}
-\end{figure}
+%\begin{figure}[htb]
+%\centering
+%\includegraphics[width=1.1\textwidth]{fig13.pdf}
+%\caption{\noindent Energy redistribution in the channel for turbulent temperature field from DNS simulations}
+%\label{spectra}
+%\end{figure}
+
+
 \newpage
 \section*{Modification of the $\tp - \varepsilon_{\theta}$ two equation model}
 From the expressions derived in the previous section it is possible to extend a general $\tp-\varepsilon_{\theta}$ model to fit radiative flows. The two additional equations read:
@@ -221,7 +225,7 @@ By substituting $\kappa^\prime = f_{\kappa} \tr$, $\overline{Q} = \overline{E}_m
 \end{split}
 \end{equation*}
 
-
+\noindent \textcolor{red}{Unfortunately we use only two of the above terms (namely term 1 and term 4) because term 2 and 3 are unstable. I still need to find an explanation for this.}
 
 
 \noindent Both $\tp$ and $\et$ are required for the calculation of $\alpha_t$ which approximates $\overline{v^\prime \tr}$ as
@@ -234,30 +238,47 @@ In a standard two equation turbulent flux model, $\alpha_t$ is calculated with a
 \end{equation*} 
 This because the temperature time scale is calculated as a mix of the velocity time scale $\tau_u= k/\varepsilon$ and the scalar time scale $\tau_s = \tp/\et$. In case of a radiative flow, radiative fluctuations act as a direct dissipation of temperature fluctuation, reducing significantly the scalar time scale. Therefore the new scalar time scale has to account for radiation as
 \begin{equation*}
-\tau_s = \frac{\tp}{\et + \varepsilon_r}
+\tau_s = \frac{\tp}{\et +c_{r11} \varepsilon_r}
 \end{equation*}
 The new radiative dissipation in a strict sense is the dissipation part of the radiative term, which can be decomposed as
 \begin{equation*}
-\mathcal{R}_{\tp} = 2 \lp \underbrace{\frac{\partial \overline{q_{ry}^\prime \tr}}{\partial y}}_{\phi_r} - \underbrace{\overline{q_{rj}^\prime\frac{\partial \tr}{\partial x_j}}}_{\varepsilon_r} \rp
+\mathcal{R}_{\tp} =  \underbrace{\frac{\partial \overline{q_{ry}^\prime \tr}}{\partial y}}_{\phi_r} - \underbrace{\overline{q_{rj}^\prime\frac{\partial \tr}{\partial x_j}}}_{\varepsilon_r} 
 \end{equation*}
-On the other hand, in the center of the channel $\varepsilon_r \gg \phi_r$, therefore it is possible to assume $\varepsilon \approx 0.5 \mathcal{R}_{\tp}$.
+On the other hand, in the center of the channel $\varepsilon_r \gg \phi_r$, therefore it is possible to assume $\varepsilon \approx \mathcal{R}_{\tp}$.
 Therefore the new formulation for the eddy diffusivity is
 \begin{equation*}
-\alpha_t = C_{\lambda} f_{\lambda} k \sqrt{\frac{k}{\varepsilon}\frac{\tp}{\et+0.5\mathcal{R}_{\tp}}}
+\alpha_t = C_{\lambda} f_{\lambda} k \sqrt{\frac{k}{\varepsilon}\frac{\tp}{\et+c_{r11} \mathcal{R}_{\tp}}}
 \end{equation*}
-\subsection*{Results}
 
+\subsubsection*{Extension to real spectra}
+This description is particularly suitable to a real spectrum simulation due to the simplicity of the assumptions. In particular only $f_{G}$ depends explicitly on $\kappa$ and therefore it has to take into account the spectral modeling of the radiative heat transfer. Therefore, depending on the discretization of the radiative spectrum $f_{G}$ will follow accordingly. As an example, if a weighted sum of grey gas is used, then the RTE is solved several times with a constant $\kappa$ and a gaussian weight associated to it, then $f_G$ will be expressed as $f_G = \sum_k w_k {f_G}_k$ where $k$ stands for the single grey gas used. If the RTE is solved with a narrow band description then $f_G$ will be calculated as an integral over the narrow band using the band absorption coefficient, and so on.
+
+\subsection*{Results}
+The set of simulations performed have different conditions but all of them are a channel with isothermal hot and cold wall on the top and bottom respectively. The first set consist of a constant absorption coefficient that varies between $0.1$ and $20$ among the cases and a constant density. The second set have a variable absorption coefficient that varies with the formula shown above and a density that varies as $\rho = T_0/(\theta+T_0)$. The parameters associated with the two sets of simulations are:
+\begin{itemize}
+\item Set 1 $Re = 2900 \ , \ \ Pr = 1 \ , \ \ Pl = 0.03 \ , \ \ T_0 = 1.5 \ , \ \ \tau = 0.1,1,5,10,20$
+\item Set 2 $Re = 3750 \ , \ \ Pr = 1 \ , \ \ Pl = 0.03 \ , \ \ T_0 = 1.5 \ , \ \ \tau = 0.1,1,10$
+\end{itemize}
+The first radiative constant $c_{r11}$ is always equal to $0.5$ while the other two constant, which represent the characteristic wavenumber, are case dependent, varying with $Re$ and $Pr$. For the first cases a value of $6.5$ and $8.5$ for $c_{r22}$ and $c_{r33}$ is found to be a good fit and for the variable density case these constant are adjusted as $c_{Re_1} = c_{Re_2} \cdot (Re_1/Re_2)$. The RTE is not directly solved in the RANS simulations but the radiative source and the absorption coefficient profile is taken from direct numerical simulation.\\ 
+In figures \ref{constk} and \ref{vark} the results for the first and second set of simulations is shown, respectively. The achronyms in the legends are 
+\begin{itemize}
+\item DNS    $\rightarrow$ direct numerical simulation 
+\item SA     $\rightarrow$ Spalart Allmaras model for eddy viscosity with $\alpha_{t} = \mu_t / 0.9$
+\item V2F-NO $\rightarrow$ $\overline{{v^\prime}^2} - f$ model for eddy viscosity with $\alpha_{t} = \mu_t / 0.9$
+\item V2F-DW $\rightarrow$ $\overline{{v^\prime}^2} - f$ model for eddy viscosity with $\tp - \et$ model for $\alpha_t$ without radiative modificartion
+\item V2F-DWR$\rightarrow$ $\overline{{v^\prime}^2} - f$ model for eddy viscosity with $\tp - \et$ model for $\alpha_t$ with radiative modificartion
+\end{itemize}
 \begin{figure}[h]
 \centering
 \includegraphics[width=1.1\textwidth]{../solution/Figures/Tempgrey.pdf}
-\caption{\noindent RANS simulation with different turbulent heat flux models for different $\tau$ cases}
+\caption{\noindent RANS simulation with different turbulent heat flux models for different $\tau$ cases for constant density / constant absorption coefficient cases}
 \label{constk}
 \end{figure}
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=1.1\textwidth]{../solution/Figures_r/Tempvar.pdf}
-\caption{\noindent RANS simulation with different turbulent heat flux models for different $\tau$ cases}
+\caption{\noindent RANS simulation with different turbulent heat flux models for different $\tau$ cases or variable density / variable absorption coefficient cases}
 \label{vark}
 \end{figure}
 

@@ -147,7 +147,7 @@ f_{\kappa} =  - \lp c_1  \frac{\Delta T}{\overline{T}^2} + c_2  \frac{2\Delta T}
 \end{equation*}
 Of course if $\kappa$ is another function of temperature the expression of $f_{\kappa}$ will have to be adapted.
 \subsection*{Approximation of $G^\prime$}
-This is the most complex part of the modeling and requires the knowledge of the spectral wavenumbers of the non-radiative channel flow. It is possible to know only the spectral dependency of the incident radiation fluctuations, and in homogeneous isotropic turbulence for grey gas is
+This is the most complex part of the modeling and requires the knowledge of the spectral wavenumbers of the non-radiative channel flow. $G$ is a non-local quantity, related to the whole temperature field, therefore it is possible to know only the dependency of the incident radiation fluctuations on temperature in a spectral domain (fourier transformed). In homogeneous isotropic turbulence for grey gas is the relationship is (Silvestri, 2018)
 \begin{equation*}
 \widehat{G^\prime} = \frac{\kappa}{\omega} \text{atan}\lp\frac{\omega}{\kappa} \rp \widehat{E_m^\prime} \ .
 \end{equation*} 
@@ -155,19 +155,19 @@ From this it is already possible to state, following from the previous considera
 \begin{equation*}
 \widehat{G^\prime} \approx \frac{\kappa}{\omega} \text{atan}\lp\frac{\omega}{\kappa} \rp f_{E_m} \widehat{\tr} \ .
 \end{equation*}
-The above equation states that the modes of $G^\prime$ are connected to the modes of $\tr$ depending on the wavenumber and on the absorption coefficient. This means that the higher the absorption coefficient the stronger $G^\prime$ gets and always on smaller $\omega$. It is possible to translate this proportionality to physical space if there is the knowledge of a charateristic wavenumber for which it is possible to write
+The above equation states that the modes of $G^\prime$ are connected to the modes of $\tr$ depending on the wavenumber and on the absorption coefficient. This means that at a higher the absorption coefficient $G^\prime$ grow stronger. In addition, small $\omega$ are beneficial for the growth of $G^\prime$. It is possible to translate this proportionality to physical space if there is the knowledge of a charateristic wavenumber, in that case it is possible to write
 \begin{equation*}
-G^\prime \approx f_G f_{E_m} \theta^\prime
+G^\prime \approx f_G f_{E_m} \theta^\prime \ ,
 \end{equation*}
-where 
+with 
 \begin{equation*}
-f_G = \frac{\kappa}{\omega_c} \text{atan}\lp\frac{\omega_c}{\kappa} \rp
+f_G = \frac{\kappa}{\omega_c} \text{atan}\lp\frac{\omega_c}{\kappa} \rp \ .
 \end{equation*}
-and $\omega_c$ is a charateristic wavenumber that represents the integral wavenumber weighted on the energy spectrum at a certain $y-$location calculated as
+$\omega_c$ is a charateristic wavenumber that represents the integral wavenumber weighted on the energy spectrum at a certain $y-$location calculated as
 \begin{equation*}
-\omega_c = {\norm{\int_{0}^{\infty} \boldsymbol{\omega^\prime} E_{\theta}(\boldsymbol{\omega^\prime}) d \boldsymbol{\omega^\prime} / \int_0^{\infty} E_{\theta}(\boldsymbol{\omega^\prime}) d \boldsymbol{\omega^\prime}}}_2
+\omega_c = {\norm{\int_{0}^{\infty} \boldsymbol{\omega^\prime} E_{\theta}(\boldsymbol{\omega^\prime}) d \boldsymbol{\omega^\prime} / \int_0^{\infty} E_{\theta}(\boldsymbol{\omega^\prime}) d \boldsymbol{\omega^\prime}}}_2 \ .
 \end{equation*}
-This wavenumber should take into account the penalty of anisotropicity on the growth of $G^\prime$, i.e. there should be weights in the norm that promote the spectral direction which contains energy at the largest wavenumbers since radiative energy will most likely escape from those directions. For the present case, with DNS knowledge of the spectral redistribution of energy in the channel, it is identified that the spanwise spectral wavenumber is dominant over the streamwise (i.e., energy at larger wavenumbers) and we assume that the wall normal direction contains energy at the same wavenumbers that the spawise direction. Therefore, following the spectral energy redistribution noticed in figure \ref{spectra}, it is possible to approximate the charateristic wavenumber as a parabola (shape of energy redistribution in spanwise direction) as
+This wavenumber should take into account the penalty of anisotropicity on the growth of $G^\prime$, i.e. there should be weights in the norm that promote the spectral direction which contains energy at the largest wavenumbers since radiative energy will most likely escape from those directions. For the present case, with DNS knowledge of the spectral redistribution of energy in the channel, it is identified that the spanwise spectral wavenumber is dominant over the streamwise (i.e., energy at larger wavenumbers) and we assume that the wall normal direction contains energy at the same wavenumbers that the spawise direction. Therefore, following the spectral energy redistribution in a channel flow, it is possible to approximate the charateristic wavenumber as a parabola (shape of energy redistribution in spanwise direction) as
 \begin{equation*}
 \omega_c = (c_{r33} - c_{r22}) y^2 - 2(c_{r33} - c_{r22})y +c_{r33} \ ,
 \end{equation*}
@@ -198,13 +198,13 @@ From the expressions derived in the previous section it is possible to extend a 
 where $\et = \overline{\frac{\partial \tr}{\partial x_j}\frac{\partial \tr}{\partial x_j}}$ and $Q = E_m - G$. \\
 The two equations contain the two additional \enquote{Radiative terms} which are unclosed terms and need to be modelled following the considerations done in the above section regarding $\kappa^\prime, \ E_m^\prime$ and $G^\prime$. Starting from equation (\ref{t2eq}), the additional term reads
 \begin{equation*}
-\mathcal{R}_{\tp} = 2\frac{\alpha}{\lambda} \lp \overline{\kappa} (\overline{E_m^\prime \tr}-\overline{G^\prime \tr}) + (\overline{E}_m - \overline{G})\overline{\kappa^\prime \tr} + \overline{\kappa^\prime E_m^\prime \tr} - \overline{\kappa^\prime G^\prime \tr} \rp
+\mathcal{R}_{\tp} = 2\frac{\alpha}{\lambda} \lp \overline{\kappa} (\overline{E_m^\prime \tr}-\overline{G^\prime \tr}) + (\overline{E}_m - \overline{G})\overline{\kappa^\prime \tr}  + \overline{\kappa^\prime E_m^\prime \tr} - \overline{\kappa^\prime G^\prime \tr} \rp
 \end{equation*}
-The last two terms on the LHS are third order terms and much smaller than the others, and a re therefore neglected. Following from the modelling of radiative fluctuations
+Following from the modelling of radiative fluctuations
 \begin{equation*}
-\mathcal{R}_{\tp} = 2\frac{\alpha}{\lambda} \lp \overline{\kappa} f_{E_m}(1 - f_G ) + (\overline{E}_m - \overline{G})f_{\kappa} \rp \tp
+\mathcal{R}_{\tp} = 2\frac{\alpha}{\lambda} \lp \overline{\kappa} f_{E_m}(1 - f_G ) + (\overline{E}_m - \overline{G})f_{\kappa} \rp \tp +2\frac{\alpha}{\lambda}\cancelto{\text{\tiny{linearize}}}{f_{\kappa}f_{E_m}(1-f_G) \overline{\tr^3}}
 \end{equation*}
-If $\kappa$ is constant $f_{\kappa} = 0$.\\
+The last term on the LHS is a third order term, much smaller than the first since both $f_{\kappa} \ll \overline{\kappa}$ and $\overline{\tr^3} \ll \tp$, and are therefore neglected. If $\kappa$ is constant $f_{\kappa} = 0$.\\
 For equation (\ref{eteq}) the radiative term can be expanded as
 \begin{equation*}
 \mathcal{R}_{\et} = 2\frac{\alpha}{\lambda} \underbrace{ \lp \overline{\frac{\partial \kappa^\prime \overline{Q}}{\partial x_j}\frac{\partial \tr}{\partial x_j}}+\cancelto{\text{\tiny{linearize}}}{\overline{\frac{\partial \kappa^\prime Q^\prime}{\partial x_j}\frac{\partial \tr}{\partial x_j}}}\rp}_{\text{fluctuating }\kappa } + 2\frac{\alpha}{\lambda} \underbrace{ \lp \overline{\frac{\partial \overline{\kappa} Q^\prime}{\partial x_j}\frac{\partial \tr}{\partial x_j}} \rp}_{\text{average } \kappa }  
@@ -263,10 +263,10 @@ The first radiative constant $c_{r11}$ is always equal to $0.5$ while the other 
 In figures \ref{constk} and \ref{vark} the results for the first and second set of simulations is shown, respectively. The achronyms in the legends are 
 \begin{itemize}
 \item DNS    $\rightarrow$ direct numerical simulation 
-\item SA     $\rightarrow$ Spalart Allmaras model for eddy viscosity with $\alpha_{t} = \mu_t / 0.9$
-\item V2F-NO $\rightarrow$ $\overline{{v^\prime}^2} - f$ model for eddy viscosity with $\alpha_{t} = \mu_t / 0.9$
-\item V2F-DW $\rightarrow$ $\overline{{v^\prime}^2} - f$ model for eddy viscosity with $\tp - \et$ model for $\alpha_t$ without radiative modificartion
-\item V2F-DWR$\rightarrow$ $\overline{{v^\prime}^2} - f$ model for eddy viscosity with $\tp - \et$ model for $\alpha_t$ with radiative modificartion
+\item SA     $\rightarrow$ Spalart Allmaras model for $\mu_t$ with $\alpha_{t} = \mu_t / 0.9$
+\item V2F-NO $\rightarrow$ $\overline{{v^\prime}^2} - f$ model for $\mu_t$ with $\alpha_{t} = \mu_t / 0.9$
+\item V2F-DW $\rightarrow$ $\overline{{v^\prime}^2} - f$ model for $\mu_t$ and $\tp - \et$ model for $\alpha_t$ without radiative modification
+\item V2F-DWR$\rightarrow$ $\overline{{v^\prime}^2} - f$ model for $\mu_t$ and $\tp - \et$ model for $\alpha_t$ with radiative modification
 \end{itemize}
 \begin{figure}[h]
 \centering

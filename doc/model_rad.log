@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.8.23)  7 FEB 2018 15:13
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.8.23)  8 FEB 2018 10:38
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -800,8 +800,8 @@ Package pdftex.def Info: ../solution/Figures/Tempgrey.pdf used on input line 27
 3.
 (pdftex.def)             Requested size: 531.75632pt x 322.27095pt.
 
-Overfull \hbox (48.34416pt too wide) in paragraph at lines 273--274
- [][] 
+Overfull \hbox (15.56633pt too wide) in paragraph at lines 272--274
+[]  [] 
  []
 
 <../solution/Figures_r/Tempvar.pdf, id=62, 833.1125pt x 304.13625pt>
@@ -812,8 +812,8 @@ Package pdftex.def Info: ../solution/Figures_r/Tempvar.pdf used on input line 2
 80.
 (pdftex.def)             Requested size: 531.75632pt x 194.13141pt.
 
-Overfull \hbox (48.34416pt too wide) in paragraph at lines 280--281
- [][] 
+Overfull \hbox (15.56633pt too wide) in paragraph at lines 279--281
+[]  [] 
  []
 
 
@@ -832,9 +832,6 @@ Package rerunfilecheck Info: File `model_rad.out' has not changed.
 
 
 LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
  ) 
 Here is how much of TeX's memory you used:
@@ -862,7 +859,7 @@ cmr5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb
 texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive
 /texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-
 dist/fonts/type1/public/amsfonts/latxfont/line10.pfb>
-Output written on model_rad.pdf (8 pages, 412808 bytes).
+Output written on model_rad.pdf (8 pages, 412815 bytes).
 PDF statistics:
  142 PDF objects out of 1000 (max. 8388607)
  110 compressed objects within 2 object streams

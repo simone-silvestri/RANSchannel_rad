@@ -90,12 +90,13 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,
     % cret = 1  constant WVN = 7;
     
     % Radiative model functions
-    cr22 = 6.5*ReT/2900*Pr; %./r.^(1./4);
-    cr33 = 8.5*ReT/2900*Pr; %./r.^(1./4);
+    cr22 = 6.5*ReT/2900; %/(Pr.^(0.25)); %./r.^(1./4);
+    cr33 = 8.5*ReT/2900; %/(Pr.^(0.25)); %./r.^(1./4);
     Cr1  = (16/1.5^4*T.^3 + 48/1.5^3*T.^2 + 48/1.5^2*T + 16/1.5)/(ReT*Pr*Pl); 
     WVN  = ((cr33-cr22).*y.^2 - 2*(cr33-cr22).*y +cr33);
 
-    Cr2  = mean(kP)./WVN.*atan(WVN./mean(kP));
+    Cr2  = kP./WVN.*atan(WVN./kP);
+    %Cr2  = mean(kP)./WVN.*atan(WVN./mean(kP));
 
     cr11 = 0.5;
     cret = 1.0;
@@ -177,7 +178,7 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,
                 A(i,i) = A(i,i) - 2*kP(i) * Cr1(i)*(1-Cr2(i))...
                 - 2*(Em(i)-G(i)).*Cr3(i);
                 b(i-1) = b(i-1)...
-                + (Em(i)-G(i)).*dCr3dy(i).*dt2dy(i); %...
+                + (Em(i)-G(i)).*dCr3dy(i).*dt2dy(i); %... %stop here
                 %+ kP(i)*dCRdy(i).*dt2dy(i)...
                 %+ Cr3(i).*dQdy(i).*dt2dy(i)...
                 %+ Cr1(i).*(1-Cr2(i)).*dkPdy(i)*dt2dy(i);

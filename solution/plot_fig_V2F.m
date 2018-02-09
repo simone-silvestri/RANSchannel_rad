@@ -298,11 +298,11 @@ print(fig,strcat(path,'uTt20.eps'),'-depsc');
 
 
 
-%% PLOTTING ONE FIGURE
+%% PLOTTING ONE FIGURE Temperature
 
 fig=figure('Position',[0 0 1200 800]);
 axp = axes('Position',[0 0 1 1],'Visible','off');
-[ha1,pos1] = tight_subplot(2,3,[0.015 0.015],[0.15 0.1],[0.07 0.07]);
+[ha1,pos1] = tight_subplot(2,3,[0.03 0.015],[0.15 0.1],[0.07 0.07]);
 
 axes(ha1(1))
 pos1 = get(gca,'Position');
@@ -433,5 +433,138 @@ legend boxoff
 
 print(fig,strcat(path,'Tempgrey.eps'),'-depsc')
 
+%% PLOTTING ONE FIGURE
 
+fig=figure('Position',[0 0 1200 800]);
+axp = axes('Position',[0 0 1 1],'Visible','off');
+[ha1,pos1] = tight_subplot(2,3,[0.03 0.015],[0.15 0.1],[0.07 0.07]);
+
+axes(ha1(1))
+pos1 = get(gca,'Position');
+plot(yd,f_DNS(1:2:end,2),'ko','MarkerSize',4);
+hold on
+plot(y,b_SN(:,9),'k:');
+plot(y,b_VN(:,9),'k-.');
+plot(y,b_VDN(:,9),'k--');
+set(gca,'FontSize',14);
+xlabel('');
+set(gca,'XTickLabel','');
+ylabel('$$\overline{v^\prime \theta^\prime}$$','Interpreter','latex','FontSize',18);
+text(1,0.9,'$$\tau=0.0$$','Interpreter','latex','FontSize',18,'HorizontalAlignment','center');
+str1 = 'DNS';
+str2 = 'SA';
+str3 = 'V2F-NO';
+str4 = 'V2F-DW';
+legend({str1,str2,str3,str4},'Interpreter','latex','FontSize',12,'location','south');
+legend boxoff
+
+axes(ha1(2))
+pos1 = get(gca,'Position');
+plot(yd,f01_DNS(1:2:end,2),'ko','MarkerSize',4);
+hold on
+plot(y,t01_SN(:,9),'k:');
+plot(y,t01_VN(:,9),'k-.');
+plot(y,t01_VDN(:,9),'k--');
+plot(y,t01_VDR(:,9),'k-');
+set(gca,'FontSize',14);
+xlabel('');
+set(gca,'XTickLabel','')
+ylabel('');
+set(gca,'YTickLabel','')
+text(1,0.9,'$$\tau=0.1$$','Interpreter','latex','FontSize',18,'HorizontalAlignment','center');
+str1 = 'DNS';
+str2 = 'SA';
+str3 = 'V2F-NO';
+str4 = 'V2F-DW';
+str5 = 'V2F-DWR';
+legend({str1,str2,str3,str4,str5},'Interpreter','latex','FontSize',12,'location','south');
+legend boxoff
+
+
+axes(ha1(3))
+pos1 = get(gca,'Position');
+plot(yd,f1_DNS(1:2:end,2),'ko','MarkerSize',4);
+hold on
+plot(y,t1_SN(:,9),'k:');
+plot(y,t1_VN(:,9),'k-.');
+plot(y,t1_VDN(:,9),'k--');
+plot(y,t1_VDR(:,9),'k-');
+set(gca,'FontSize',14);
+xlabel('');
+ylabel('');
+set(gca,'XTickLabel','')
+set(gca,'YTickLabel','')
+text(1,0.9,'$$\tau=1$$','Interpreter','latex','FontSize',18,'HorizontalAlignment','center');
+str1 = 'DNS';
+str2 = 'SA';
+str3 = 'V2F-NO';
+str4 = 'V2F-DW';
+str5 = 'V2F-DWR';
+legend({str1,str2,str3,str4,str5},'Interpreter','latex','FontSize',12,'location','south');
+legend boxoff
+
+axes(ha1(4))
+pos1 = get(gca,'Position');
+plot(yd,f5_DNS(1:2:end,2),'ko','MarkerSize',4);
+hold on
+plot(y,t5_SN(:,9),'k:');
+plot(y,t5_VN(:,9),'k-.');
+plot(y,t5_VDN(:,9),'k--');
+plot(y,t5_VDR(:,9),'k-');
+set(gca,'FontSize',14);
+xlabel('$$y$$','Interpreter','latex','FontSize',18);
+ylabel('$$\overline{v^\prime \theta^\prime}$$','Interpreter','latex','FontSize',18);
+text(1,0.9,'$$\tau=5$$','Interpreter','latex','FontSize',18,'HorizontalAlignment','center');
+str1 = 'DNS';
+str2 = 'SA';
+str3 = 'V2F-NO';
+str4 = 'V2F-DW';
+str5 = 'V2F-DWR';
+legend({str1,str2,str3,str4,str5},'Interpreter','latex','FontSize',12,'location','south');
+legend boxoff
+
+axes(ha1(5))
+pos1 = get(gca,'Position');
+plot(yd,f10_DNS(1:2:end,2),'ko','MarkerSize',4);
+hold on
+plot(y,t10_SN(:,9),'k:');
+plot(y,t10_VN(:,9),'k-.');
+plot(y,t10_VDN(:,9),'k--');
+plot(y,t10_VDR(:,9),'k-');
+set(gca,'FontSize',14);
+xlabel('$$y$$','Interpreter','latex','FontSize',18);
+ylabel('');
+set(gca,'YTickLabel','')
+text(1,0.9,'$$\tau=10$$','Interpreter','latex','FontSize',18,'HorizontalAlignment','center');
+str1 = 'DNS';
+str2 = 'SA';
+str3 = 'V2F-NO';
+str4 = 'V2F-DW';
+str5 = 'V2F-DWR';
+legend({str1,str2,str3,str4,str5},'Interpreter','latex','FontSize',12,'location','south');
+legend boxoff
+
+axes(ha1(6))
+pos1 = get(gca,'Position');
+plot(yd,f20_DNS(1:2:end,2),'ko','MarkerSize',4);
+hold on
+plot(y,t20_SN(:,9),'k:');
+plot(y,t20_VN(:,9),'k-.');
+plot(y,t20_VDN(:,9),'k--');
+plot(y,t20_VDR(:,9),'k-');
+set(gca,'FontSize',14);
+xlabel('$$y$$','Interpreter','latex','FontSize',18);
+ylabel('');
+set(gca,'YTickLabel','')
+text(1,0.9,'$$\tau=20$$','Interpreter','latex','FontSize',18,'HorizontalAlignment','center');
+str1 = 'DNS';
+str2 = 'SA';
+str3 = 'V2F-NO';
+str4 = 'V2F-DW';
+str5 = 'V2F-DWR';
+legend({str1,str2,str3,str4,str5},'Interpreter','latex','FontSize',12,'location','south');
+legend boxoff
+
+
+print(fig,strcat(path,'fluxgrey.eps'),'-depsc')
 

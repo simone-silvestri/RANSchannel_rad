@@ -10,7 +10,7 @@
 %   r           density
 %   mu          molecular viscosity
 %
-function [r,mu,alpha] = calcProp(T,ReT,Pr,casename)
+function [r,mu,alpha] = calcProp(T,Tdns,ReT,Pr,casename)
 
     n = size(T,1);
     
@@ -28,6 +28,10 @@ function [r,mu,alpha] = calcProp(T,ReT,Pr,casename)
         alpha = ones(n,1)./ReT./Pr;
     elseif strcmp(casename,'vardens')
         r     = 1.5./(T+1.5);
+        mu    = ones(n,1)./ReT;
+        alpha = ones(n,1)./ReT./Pr;
+    elseif strcmp(casename,'nodensity')
+        r     = 1.5./(Tdns+1.5);
         mu    = ones(n,1)./ReT;
         alpha = ones(n,1)./ReT./Pr;
     else

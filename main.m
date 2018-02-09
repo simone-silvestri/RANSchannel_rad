@@ -13,7 +13,7 @@
 %**************************************************************************
 
 close all; 
-%clear all;
+clear all;
 
 
 %--------------------------------------------------------------------------
@@ -62,11 +62,15 @@ turbPrT = 'DWX';
 % -----  choose Radiation model modification -----
 % 0 ...  Conventional t2 - et equations
 % 1 ...  Radiative source term in t2 and et equations
-RadMod = 0;
-% 0 ...  constant rho and kP
-% 1 ...  variable rho and kP
-kPMod  = 0; 
-varDens= 0;
+RadMod = 1;
+% 0 ...  constant kP
+% 1 ...  variable kP
+% 2 ...  variable non-grey k
+kPMod  = 1; 
+% 0 ...  constant rho
+% 1 ...  variable rho
+% 2 ...  rho from DNS
+varDens= 1;
 
 % -----  compressible modification  -----
 % 0 ... Conventional models without compressible modifications
@@ -87,7 +91,7 @@ underrelaxT = 0.9;
 % 2 ... radiative heat source taken from DNS calculations (radCase)
 solveRad = 2;
 stepRad  = 3;
-radCase  = 't10';
+radCase  = 't01r';
 
 % -----  channel height  -----
 height = 2;
@@ -120,7 +124,7 @@ switch varDens
     case 0; ReT = 2900;
     case 1; ReT = 3750;
 end
-Pr  = 0.7;
+Pr  = 1;
 Pl  = 0.03;
 Prt = ones(n,1)*1.0; 
 b_old = -ones(n-2,1)*0.005;
@@ -128,6 +132,7 @@ b = b_old;
 switch varDens
     case 0; casename = 'constant';
     case 1; casename = 'vardens';
+    case 2; casename = 'nodensity';
 end
 
 %% ------------------------------------------------------------------------
@@ -149,10 +154,87 @@ T      = 1 - MESH.y/height;
 T(1)   = 1;
 T(end) = 0;
 
+% radiative quantities
+pathm    = strcat('solution/DNS/',radCase,'m');
+pathf    = strcat('solution/DNS/',radCase,'f');
+pathc    = strcat('solution/DNS/',radCase,'c');
+pathk    = strcat('solution/DNS/',radCase,'k');
+pathr    = strcat('solution/DNS/',radCase,'r');
+Dm = importdata(pathm);
+Df = importdata(pathf);
+Dc = importdata(pathc);
+Dk = importdata(pathk);
+Dr = importdata(pathr);
+DNSt=importdata('profProp');
+if solveRad == 1 
+    I     = zeros(n+1,nT,nP);
+    QR    = zeros(n,1);
+    qy    = zeros(n,1);
+    QRint = zeros(n+1,1);
+    Tint  = zeros(n+1,1);
+    qyint = zeros(n+1,1);
+    Sc    = zeros(n+1,5,5,nT,nP);
+    kP    = interp1(Dm(:,1),Dm(:,9),ANG.y,'spline');
+elseif solveRad == 2
+     if kPMod == 2
+%         QR    = interp1(Dm(:,1),Dm(:,7),MESH.y,'spline');
+%         kP    = interp1(Dm(:,1),Dm(:,10),MESH.y,'spline');
+%         G     = interp1(Dm(:,1),Dm(:,11),MESH.y,'spline');
+%         Em    = interp1(Dm(:,1),Dm(:,13),MESH.y,'spline')./kP;
+        QR    = interp1(DNSt(:,1),DNSt(:,8),MESH.y,'spline');
+        kP    = interp1(DNSt(:,1),DNSt(:,13),MESH.y,'spline');
+        G     = interp1(DNSt(:,1),DNSt(:,11),MESH.y,'spline')./kP;
+        Em    = QR./kP + G;
+        Dm(:,5)= interp1(DNSt(:,1),DNSt(:,2),Dm(:,1),'spline');
+    else
+        QR    = interp1(Dm(:,1),Dm(:,7),MESH.y,'spline');
+        Em    = interp1(Dm(:,1),Dm(:,8),MESH.y,'spline');
+        G     = interp1(Dm(:,1),Dm(:,10),MESH.y,'spline');
+        kP    = interp1(Dm(:,1),Dm(:,9),MESH.y,'spline');
+    end
+    qy    = interp1(Df(:,1),Df(:,2),MESH.y,'spline')...
+          - interp1(Df(:,1),Df(:,3),MESH.y,'spline');
+else
+    QR    = zeros(n,1); 
+    kP    = interp1(Dm(:,1),Dm(:,9),MESH.y,'spline');
+    Em    = zeros(n,1);
+    G     = zeros(n,1);
+    qy    = zeros(n,1);
+end
+
+Tdns = (955-573)*interp1(Dm(:,1),Dm(:,5),MESH.y,'spline')+573;
+
+cP = zeros(1,6);
+if kPMod == 2
+    %     [wvl,wvr,wvc,wq,kq,Tnb] = readNB(119,16,52);
+    abs1 = importdata('planck-mean.txt');
+    kG   = interp1(abs1(:,1),abs1(:,4),Tdns,'spline');
+    cP1  = polyfit(1./abs1(:,1),abs1(:,3),5);
+    for i = 1:6
+        cP(6-i+1) = cP1(i);
+    end
+elseif kPMod == 1
+    cP   = [-0.23093, -1.12390*1e3, 9.41530*1e6, -2.99880*1e9, 0.51382*1e12, -1.8684e-05*1e15];
+    kdns = cP(1) + cP(2)./(Tdns)+cP(3)./(Tdns.^2) + cP(4)./(Tdns.^3) + cP(5)./(Tdns.^4) + cP(6)./(Tdns.^5) ;
+    Ck   = mean(kP./kdns);
+    cP   = Ck*[-0.23093, -1.12390*1e3, 9.41530*1e6, -2.99880*1e9, 0.51382*1e12, -1.8684e-05*1e15];
+    kG   = kP; 
+else
+    wvl = 0;
+    wvr = 0;
+    wvc = 0;
+    wvq = 0;
+    kq  = 0;
+    Tnb = 0;
+    kG   = kP;
+end
+
+Tdns = (Tdns -573)/(955-573);
+
 if (solveEnergy==0)  % transport properties
     r=ones(n,1); mu=ones(n,1)/ReT; T=zeros(n,1);
 else
-    [r, mu, alpha] = calcProp(T, ReT, Pr, casename);
+    [r, mu, alpha] = calcProp(T, Tdns, ReT, Pr, casename);
 end
 
 % turbulent scalars
@@ -166,47 +248,7 @@ mut  = zeros(n,1);
 alphat  = zeros(n,1);
 nuSA = mu./r; nuSA(1) = 0.0; nuSA(n) = 0.0;
 
-% radiative quantities
-
-pathm    = strcat('solution/DNS/',radCase,'m');
-pathf    = strcat('solution/DNS/',radCase,'f');
-pathc    = strcat('solution/DNS/',radCase,'c');
-pathk    = strcat('solution/DNS/',radCase,'k');
-pathr    = strcat('solution/DNS/',radCase,'r');
-Dm = importdata('prof_temp');
-Df = importdata(pathf);
-Dc = importdata(pathc);
-Dk = importdata(pathk);
-Dr = importdata(pathr);
-
-if solveRad == 1 
-    I     = zeros(n+1,nT,nP);
-    QR    = zeros(n,1);
-    qy    = zeros(n,1);
-    QRint = zeros(n+1,1);
-    Tint  = zeros(n+1,1);
-    qyint = zeros(n+1,1);
-    Sc    = zeros(n+1,5,5,nT,nP);
-    kP    = interp1(Dm(:,1),Dm(:,9),ANG.y,'spline');
-elseif solveRad == 2
-    QR    = interp1(Dm(:,1),Dm(:,7),MESH.y,'spline');
-    Em    = interp1(Dm(:,1),Dm(:,8),MESH.y,'spline');
-    G     = interp1(Dm(:,1),Dm(:,10),MESH.y,'spline');
-    kP    = 10*ones(n,1); %interp1(Dm(:,1),Dm(:,9),MESH.y,'spline');
-    qy    = interp1(Df(:,1),Df(:,2),MESH.y,'spline')...
-          - interp1(Df(:,1),Df(:,3),MESH.y,'spline');
-else
-    QR    = zeros(n,1); 
-    kP    = interp1(Dm(:,1),Dm(:,9),MESH.y,'spline');
-    Em    = zeros(n,1);
-    G     = zeros(n,1);
-    qy    = zeros(n,1);
-end
-cP= [-0.23093, -1.12390*1e3, 9.41530*1e6, -2.99880*1e9, 0.51382*1e12, -1.8684e-05*1e15];
-Tdns = (955-573)*interp1(Dm(:,1),Dm(:,2),MESH.y,'spline')+573;
-kdns = cP(1) + cP(2)./(Tdns)+cP(3)./(Tdns.^2) + cP(4)./(Tdns.^3) + cP(5)./(Tdns.^4) + cP(6)./(Tdns.^5) ;
-Ck   = mean(kP./kdns);
-
+%% SOLVE THE EQUATIONS
 %--------------------------------------------------------------------------
 %
 %       Iterate RANS equations
@@ -225,7 +267,7 @@ while (residual > tol || residualT > tol || residualQ > tol*1e3) && (iter<nmax)
     if(mod(iter,20)==0)
         figure(1)
         clf;
-        plot(MESH.y,T,Dm(:,1),Dm(:,2));
+        plot(MESH.y,T,Dm(:,1),Dm(:,5));
         figure(2)
         semilogy(iter/20,residualT,'bo','MarkerSize',6)
         ylim([1e-09 1])
@@ -246,14 +288,17 @@ while (residual > tol || residualT > tol || residualQ > tol*1e3) && (iter<nmax)
     
     % Solve energy equation
     if (solveEnergy == 1)
-        if strcmp(turbMod,'SST')
-            e = 0.09*k.*om;
-        end
+%         
+%         if kPMod == 2
+%             kG = averagekG(wvl,wvr,wvc,wq,kq,Tdns,Tnb);
+%         end
+%             
+        
         % Solve turbulent flux model to calculate eddy diffusivity 
         switch turbPrT
             case 'V2T'; [uT,lam] = V2T(uT,k,e,v2,mu,ReT,Pr,Pl,T,kP,r,MESH,RadMod);
             case 'PRT'; [lam,alphat] = PRT( mu,mut,alpha,T,r,qy,ReT,MESH,RadMod);
-            case 'DWX'; [lam,t2,et,alphat] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,MESH,RadMod,kPMod,Ck);
+            case 'DWX'; [lam,t2,et,alphat] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,kG,ReT,Pr,Pl,MESH,RadMod,kPMod,cP);
             otherwise;  lam = mu./Pr + (mut./0.9);   
         end
         T_old = T;
@@ -296,7 +341,7 @@ while (residual > tol || residualT > tol || residualQ > tol*1e3) && (iter<nmax)
     if strcmp(turbMod,'DNS')==0
         
         % calculate density
-        [r,mu,alpha] = calcProp(abs(T), ReT, Pr, casename);
+        [r,mu,alpha] = calcProp(abs(T), Tdns, ReT, Pr, casename);
          
         % Solve momentum equation:  0 = d/dy[(mu+mut)dudy] - rho fx
         mueff = mu + mut;
@@ -328,9 +373,6 @@ while (residual > tol || residualT > tol || residualQ > tol*1e3) && (iter<nmax)
     iter = iter + 1;
 end
 fprintf('%d\t%12.6e\n\n', iter, residual);
-
-Tdns = (Tdns - 573)./(955-573);
-
 
 fprintf('The residuals with this method is: %12.6e\n\n',norm(T-Tdns));
 

@@ -52,21 +52,19 @@
 %  k prime = - t prime dT (c(6) 5/T^6 + c(5) 4/T^5 + c(4) 3/T^4 + c(3) 2/T^3 + c(2) 1/T^2 )
 
 
-function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,mesh,RadMod,kPMod,Ck)
+function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,kG,ReT,Pr,Pl,mesh,RadMod,kPMod,cP)
 
     n = size(T,1);
     
-    tv       = mesh.ddy*u/ReT;
-    ut       = sqrt(tv(1)/r(1));
+    tv       = (mesh.ddy*u).*mu;
+    ut       = sqrt(tv(1)./r(1));
     Retau    = ReT.*ut;
     y        = mesh.y;
    	wallDist = min(y, 2-y);
     yplus    = wallDist.*Retau; 
 
     % Radiative Planck mean absorption coefficient
-    if kPMod == 1
-        A = 1000;
-        cP= Ck*[-0.23093, -1.12390*A, 9.41530*A^2, -2.99880*A^3, 0.51382*A^4, -1.8684e-05*A^5];
+    if kPMod ~= 0
         Tr = T*(955-573) + 573;
         Cr3 = (cP(6).*5./Tr.^6+cP(5)*4./Tr.^5+cP(4)*3./Tr.^4+cP(3)*2./Tr.^3 ...
             +cP(2)*1./Tr.^2 );
@@ -95,7 +93,7 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,
     Cr1  = (16/1.5^4*T.^3 + 48/1.5^3*T.^2 + 48/1.5^2*T + 16/1.5)/(ReT*Pr*Pl); 
     WVN  = ((cr33-cr22).*y.^2 - 2*(cr33-cr22).*y +cr33);
 
-    Cr2  = kP./WVN.*atan(WVN./kP);
+    Cr2  = kG./WVN.*atan(WVN./kG);
     %Cr2  = mean(kP)./WVN.*atan(WVN./mean(kP));
 
     cr11 = 0.5;
@@ -127,8 +125,8 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,
     fl(1:n-1:n) = 0.0;
    
     
-%     fl  = (1-exp(-Reps./16)).^2.*(1+3./(Rturb.^(3./4)));
-%     fl(1:n-1:n) = 0.0;
+    fl  = (1-exp(-Reps./16)).^2.*(1+3./(Rturb.^(3./4)));
+    fl(1:n-1:n) = 0.0;
     
     alphat = max(r.*Cl.*fl.*k.^2./e.*(2*R).^m,0.0);
     
@@ -148,7 +146,7 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,
 
     % implicitly treated source term : -Cd2 fd2 e/t2 - Cd1 fd1 et^2 / t2 
     for i=2:n-1
-        A(i,i) = A(i,i) - Cd2*fd2(i)*e(i)/k(i) - Cd1*fd1(i)*et(i)/t2(i);
+        A(i,i) = A(i,i) - Cd2*fd2(i)*e(i)/k(i).*r(i) - Cd1*fd1(i)*et(i)/t2(i).*r(i);
     end
         
     % Right-hand-side: - Cp1 fp1 sqrt(e et/ (k t2)) Pt
@@ -170,7 +168,7 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,ReT,Pr,Pl,
                 dt2dy(i) = 0;
             end
         end
-        if(kPMod==1)
+        if(kPMod~=0)
             dQdy    = (mesh.ddy*Em)-(mesh.ddy*G);
             dCr3dy  = (mesh.ddy*Cr3);
             dkPdy   = (mesh.ddy*kP);

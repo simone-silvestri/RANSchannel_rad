@@ -105,7 +105,7 @@ hold on
 plot(y,t01_SN(:,3),'k:');
 plot(y,t01_VN(:,3),'k-.');
 plot(y,t01_VDN(:,3),'k--');
-plot(y,t01_VDR(:,3),'k-');
+plot(y,t01_VDR(:,3),'b-');
 set(gca,'FontSize',14);
 xlabel('$$y$$','Interpreter','latex','FontSize',18);
 ylabel('');
@@ -134,7 +134,7 @@ hold on
 plot(y,t1_SN(:,3),'k:');
 plot(y,t1_VN(:,3),'k-.');
 plot(y,t1_VDN(:,3),'k--');
-plot(y,t1_VDR(:,3),'k-');
+plot(y,t1_VDR(:,3),'b-');
 set(gca,'FontSize',14);
 xlabel('$$y$$','Interpreter','latex','FontSize',18);
 ylabel('$$T$$','Interpreter','latex','FontSize',18);
@@ -156,7 +156,7 @@ hold on
 plot(y,t5_SN(:,3),'k:');
 plot(y,t5_VN(:,3),'k-.');
 plot(y,t5_VDN(:,3),'k--');
-plot(y,t5_VDR(:,3),'k-');
+plot(y,t5_VDR(:,3),'b-');
 set(gca,'FontSize',14);
 xlabel('$$y$$','Interpreter','latex','FontSize',18);
 ylabel('');
@@ -185,7 +185,7 @@ hold on
 plot(y,t10_SN(:,3),'k:');
 plot(y,t10_VN(:,3),'k-.');
 plot(y,t10_VDN(:,3),'k--');
-plot(y,t10_VDR(:,3),'k-');
+plot(y,t10_VDR(:,3),'b-');
 set(gca,'FontSize',14);
 xlabel('$$y$$','Interpreter','latex','FontSize',18);
 ylabel('$$T$$','Interpreter','latex','FontSize',18);
@@ -207,7 +207,7 @@ hold on
 plot(y,t20_SN(:,3),'k:');
 plot(y,t20_VN(:,3),'k-.');
 plot(y,t20_VDN(:,3),'k--');
-plot(y,t20_VDR(:,3),'k-');
+plot(y,t20_VDR(:,3),'b-');
 set(gca,'FontSize',14);
 xlabel('$$y$$','Interpreter','latex','FontSize',18);
 ylabel('');
@@ -236,7 +236,7 @@ hold on
 plot(y,t1p_SN(:,3),'k:');
 plot(y,t1p_VN(:,3),'k-.');
 plot(y,t1p_VDN(:,3),'k--');
-plot(y,t1p_VDR(:,3),'k-');
+plot(y,t1p_VDR(:,3),'b-');
 set(gca,'FontSize',14);
 xlabel('$$y$$','Interpreter','latex','FontSize',18);
 ylabel('$$T$$','Interpreter','latex','FontSize',18);
@@ -258,7 +258,7 @@ hold on
 plot(y,t10p_SN(:,3),'k:');
 plot(y,t10p_VN(:,3),'k-.');
 plot(y,t10p_VDN(:,3),'k--');
-plot(y,t10p_VDR(:,3),'k-');
+plot(y,t10p_VDR(:,3),'b-');
 set(gca,'FontSize',14);
 xlabel('$$y$$','Interpreter','latex','FontSize',18);
 ylabel('');
@@ -312,7 +312,7 @@ hold on
 plot(y,t01_SN(:,9),'k:');
 plot(y,t01_VN(:,9),'k-.');
 plot(y,t01_VDN(:,9),'k--');
-plot(y,t01_VDR(:,9),'k-');
+plot(y,t01_VDR(:,9),'b-');
 axis([0 2 0 yl]);
 set(gca,'FontSize',14);
 xlabel('$$y$$','Interpreter','latex','FontSize',18);
@@ -346,7 +346,7 @@ hold on
 plot(y,t1_SN(:,9),'k:');
 plot(y,t1_VN(:,9),'k-.');
 plot(y,t1_VDN(:,9),'k--');
-plot(y,t1_VDR(:,9),'k-');
+plot(y,t1_VDR(:,9),'b-');
 axis([0 2 0 yl]);
 set(gca,'FontSize',14);
 xlabel('$$y$$','Interpreter','latex','FontSize',18);
@@ -368,7 +368,7 @@ hold on
 plot(y,t5_SN(:,9),'k:');
 plot(y,t5_VN(:,9),'k-.');
 plot(y,t5_VDN(:,9),'k--');
-plot(y,t5_VDR(:,9),'k-');
+plot(y,t5_VDR(:,9),'b-');
 axis([0 2 0 yl]);
 set(gca,'FontSize',14);
 xlabel('$$y$$','Interpreter','latex','FontSize',18);
@@ -402,7 +402,7 @@ hold on
 plot(y,t10_SN(:,9),'k:');
 plot(y,t10_VN(:,9),'k-.');
 plot(y,t10_VDN(:,9),'k--');
-plot(y,t10_VDR(:,9),'k-');
+plot(y,t10_VDR(:,9),'b-');
 axis([0 2 0 yl]);
 set(gca,'FontSize',14);
 xlabel('$$y$$','Interpreter','latex','FontSize',18);
@@ -424,7 +424,7 @@ hold on
 plot(y,t20_SN(:,9),'k:');
 plot(y,t20_VN(:,9),'k-.');
 plot(y,t20_VDN(:,9),'k--');
-plot(y,t20_VDR(:,9),'k-');
+plot(y,t20_VDR(:,9),'b-');
 axis([0 2 0 yl]);
 set(gca,'FontSize',14);
 xlabel('$$y$$','Interpreter','latex','FontSize',18);
@@ -458,7 +458,7 @@ hold on
 plot(y,t1p_SN(:,9),'k:');
 plot(y,t1p_VN(:,9),'k-.');
 plot(y,t1p_VDN(:,9),'k--');
-plot(y,t1p_VDR(:,9),'k-');
+plot(y,t1p_VDR(:,9),'b-');
 axis([0 2 0 yl]);
 set(gca,'FontSize',14);
 xlabel('$$y$$','Interpreter','latex','FontSize',18);
@@ -480,7 +480,7 @@ hold on
 plot(y,t10p_SN(:,9),'k:');
 plot(y,t10p_VN(:,9),'k-.');
 plot(y,t10p_VDN(:,9),'k--');
-plot(y,t10p_VDR(:,9),'k-');
+plot(y,t10p_VDR(:,9),'b-');
 axis([0 2 0 yl]);
 set(gca,'FontSize',14);
 xlabel('$$y$$','Interpreter','latex','FontSize',18);

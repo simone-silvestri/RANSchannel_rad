@@ -66,11 +66,11 @@ RadMod = 1;
 % 0 ...  constant kP
 % 1 ...  variable kP
 % 2 ...  variable non-grey k
-kPMod  = 0; 
+kPMod  = 2; 
 % 0 ...  constant rho
 % 1 ...  variable rho
 % 2 ...  rho from DNS
-varDens= 0;
+varDens= 1;
 
 % -----  compressible modification  -----
 % 0 ... Conventional models without compressible modifications
@@ -91,7 +91,7 @@ underrelaxT = 0.9;
 % 2 ... radiative heat source taken from DNS calculations (radCase)
 solveRad = 2;
 stepRad  = 3;
-radCase  = 't1';
+radCase  = 'H2O';
 
 % -----  channel height  -----
 height = 2;
@@ -124,7 +124,7 @@ switch varDens
     case 0; ReT = 2900;
     case 1; ReT = 3750;
 end
-Pr  = 0.7;
+Pr  = 1;
 Pl  = 0.03;
 Prt = ones(n,1)*1.0; 
 b_old = -ones(n-2,1)*0.005;
@@ -178,15 +178,15 @@ if solveRad == 1
     kP    = interp1(Dm(:,1),Dm(:,9),ANG.y,'spline');
 elseif solveRad == 2
      if kPMod == 2
-%         QR    = interp1(Dm(:,1),Dm(:,7),MESH.y,'spline');
-%         kP    = interp1(Dm(:,1),Dm(:,10),MESH.y,'spline');
-%         G     = interp1(Dm(:,1),Dm(:,11),MESH.y,'spline');
-%         Em    = interp1(Dm(:,1),Dm(:,13),MESH.y,'spline')./kP;
-        QR    = interp1(DNSt(:,1),DNSt(:,8),MESH.y,'spline');
-        kP    = interp1(DNSt(:,1),DNSt(:,13),MESH.y,'spline');
-        G     = interp1(DNSt(:,1),DNSt(:,11),MESH.y,'spline')./kP;
-        Em    = QR./kP + G;
-        Dm(:,5)= interp1(DNSt(:,1),DNSt(:,2),Dm(:,1),'spline');
+        QR    = interp1(Dm(:,1),Dm(:,7),MESH.y,'spline');
+        kP    = interp1(Dm(:,1),Dm(:,10),MESH.y,'spline');
+        G     = interp1(Dm(:,1),Dm(:,12),MESH.y,'spline')./kP;
+        Em    = interp1(Dm(:,1),Dm(:,13),MESH.y,'spline')./kP;
+%         QR    = interp1(DNSt(:,1),DNSt(:,8),MESH.y,'spline');
+%         kP    = interp1(DNSt(:,1),DNSt(:,13),MESH.y,'spline');
+%         G     = interp1(DNSt(:,1),DNSt(:,11),MESH.y,'spline')./kP;
+%         Em    = QR./kP + G;
+%         Dm(:,5)= interp1(DNSt(:,1),DNSt(:,2),Dm(:,1),'spline');
     else
         QR    = interp1(Dm(:,1),Dm(:,7),MESH.y,'spline');
         Em    = interp1(Dm(:,1),Dm(:,8),MESH.y,'spline');
@@ -209,7 +209,13 @@ cP = zeros(1,6);
 if kPMod == 2
     %     [wvl,wvr,wvc,wq,kq,Tnb] = readNB(119,16,52);
     abs1 = importdata('planck-mean.txt');
-    kG   = interp1(abs1(:,1),abs1(:,4),Tdns,'spline');
+    W = 7*ReT/2900;
+    ktemp = linspace(4,30,length(abs1(:,1)));
+    for i = 1:length(abs1(:,1))
+        kGt(i) = interp1(ktemp./(W).*atan(W./ktemp)-abs1(i,2)/abs1(i,3),ktemp,0,'spline');
+    end
+    kG   = interp1(abs1(:,1),kGt,Tdns,'spline');
+    
     cP1  = polyfit(1./abs1(:,1),abs1(:,3),5);
     for i = 1:6
         cP(6-i+1) = cP1(i);
@@ -474,8 +480,8 @@ plot(y,alphat); hold on
 plot(Df(:,1),alphatd);
 
 %% ------------------------------------------------------------------------
-% plotting the DNS profiles
-% 
+%plotting the DNS profiles
+
 if strcmp(turbPrT,'DWX')
     switch RadMod
         case 1;   string = strcat('solution/',turbMod,'-',turbPrT,'/',radCase,'_','rad');

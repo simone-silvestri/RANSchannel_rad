@@ -92,11 +92,10 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,kG,ReT,Pr,
     cr22 = 7*(ReT/2900).^(2/2);%*(Pr.^(1./2)); %./r.^(1./4);
     cr33 = 7*(ReT/2900).^(2/2);%*(Pr.^(1./2)); %./r.^(1./4);
     WVN  = ((cr33-cr22).*y.^2 - 2*(cr33-cr22).*y +cr33);
-
-    Cr2  = kG./WVN.*atan(WVN./kG);
     
-    %Cr2  = mean(kP)./WVN.*atan(WVN./mean(kP));
-
+    Cr2  = (kG+kP)*0.5./WVN.*atan(WVN./(kG/2+kP/2));
+    
+   
     cr11 = 0.5;
     cret = 1.0;
     

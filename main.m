@@ -66,11 +66,11 @@ RadMod = 1;
 % 0 ...  constant kP
 % 1 ...  variable kP
 % 2 ...  variable non-grey k
-kPMod  = 2; 
+kPMod  = 0; 
 % 0 ...  constant rho
 % 1 ...  variable rho
 % 2 ...  rho from DNS
-varDens= 1;
+varDens= 0;
 
 % -----  compressible modification  -----
 % 0 ... Conventional models without compressible modifications
@@ -91,7 +91,7 @@ underrelaxT = 0.9;
 % 2 ... radiative heat source taken from DNS calculations (radCase)
 solveRad = 2;
 stepRad  = 3;
-radCase  = 'H2O';
+radCase  = 't1';
 
 % -----  channel height  -----
 height = 2;
@@ -124,7 +124,7 @@ switch varDens
     case 0; ReT = 2900;
     case 1; ReT = 3750;
 end
-Pr  = 1;
+Pr  = 0.7;
 Pl  = 0.03;
 Prt = ones(n,1)*1.0; 
 b_old = -ones(n-2,1)*0.005;
@@ -160,6 +160,7 @@ pathf    = strcat('solution/DNS/',radCase,'f');
 pathc    = strcat('solution/DNS/',radCase,'c');
 pathk    = strcat('solution/DNS/',radCase,'k');
 pathr    = strcat('solution/DNS/',radCase,'r');
+%Dm = importdata('pref_temp_1');
 Dm = importdata(pathm);
 Df = importdata(pathf);
 Dc = importdata(pathc);
@@ -259,21 +260,21 @@ nResid = 50;                       % interval to print residuals
 residual = 1e20; residualT = 1e20; residualQ = 1e20; iter = 0;
 
 
-figure('Position',[1000 1000 800 600])
-figure('Position',[50 1000 800 600])
+% figure('Position',[1000 1000 800 600])
+% figure('Position',[50 1000 800 600])
 
 while (residual > tol || residualT > tol || residualQ > tol*1e3) && (iter<nmax)
  
-    if(mod(iter,20)==0)
-        figure(1)
-        clf;
-        plot(MESH.y,T,Dm(:,1),Dm(:,5));
-        figure(2)
-        semilogy(iter/20,residualT,'bo','MarkerSize',6)
-        ylim([1e-09 1])
-        hold on
-        pause(0.00001);
-    end
+%     if(mod(iter,20)==0)
+%         figure(1)
+%         clf;
+%         plot(MESH.y,T,MESH.y,Tdns);
+%         figure(2)
+%         semilogy(iter/20,residualT,'bo','MarkerSize',6)
+%         ylim([1e-09 1])
+%         hold on
+%         pause(0.00001);
+%     end
 
     % Solve turbulence model to calculate eddy viscosity
     switch turbMod
@@ -462,7 +463,7 @@ end
 
 figure(3); hold off
 plot(y,T); hold on
-plot(Dm(:,1),Dm(:,5));
+plot(y,Tdns);
 
 figure(4); hold off
 plot(y,THF); hold on
@@ -475,12 +476,14 @@ plot(Df(:,1),alphatd);
 %% ------------------------------------------------------------------------
 % plotting the DNS profiles
 % 
-
-switch RadMod
-    case 1;   string = strcat('solution/',turbMod,'-',turbPrT,'/',radCase,'_','rad'); 
-    case 0;   string = strcat('solution/',turbMod,'-',turbPrT,'/',radCase); 
+if strcmp(turbPrT,'DWX')
+    switch RadMod
+        case 1;   string = strcat('solution/',turbMod,'-',turbPrT,'/',radCase,'_','rad');
+        case 0;   string = strcat('solution/',turbMod,'-',turbPrT,'/',radCase);
+    end
+else
+    string = strcat('solution/',turbMod,'-',turbPrT,'/',radCase);
 end
-        
 fid = fopen(string,'w');
 for i=1:n
     fprintf(fid,'%20.10f\t%20.10f\t%20.10f\t%20.10f\t%20.10f\t%20.10f\t%20.10f\t%20.10f\t%20.10f\t%20.10f\t%20.10f\t%20.10f\t%20.10f\t%20.10f\n',...
@@ -489,79 +492,5 @@ end
 fclose(fid);
 
 
-% % COMPARE TO DNS
-% 
-% %    RANS model
-%    	wallDist = min(y, 2-y);
-% 
-% %    Model constants
-%     Cl    = 0.1;
-%     Cp1   = 2.34;
-%     Cd1   = 2.0;
-%     Cd2   = 0.9;
-%     Ce2   = 1.9;
-%     siget = 1.0;
-%     sigt2 = 1.0;
-%     m     = 0.5;
-%     
-% %    Radiative model functions
-%     cr22 = 7.0;
-%     cr11 = 1.0;
-%     Cr1  = (16/1.5^4*T.^3 + 48/1.5^3*T.^2 + 48/1.5^2*T + 16/1.5)/(ReT*Pr*Pl); 
-%     Cr2  = kP./cr22.*atan(cr22./kP);
-%     
-% %    Relaxation factors
-%     underrelaxt2  = 0.8;
-%     underrelaxet  = 0.8;  
-%     
-% %    Time and length scales, eddy diffusivity and turbulent production
-%     Reps   = (mu.*e).^(1./4)./mu.*wallDist;
-%     Rturb  = (k.^2)./(mu.*e);
-%     
-% %    Model damping functions
-%     fd1    = 1 - exp(-(Reps./1.7)).^2; 
-%     feps   = 1 - 0.3*exp(-(Rturb/6.5).^2);
-%     fd2    = (1/Cd2)*(Ce2*feps - 1).*(1 - exp(-Reps./5.8).^2); 
-%     
-% %    turbulent diffusivity and production
-%     if RadMod == 1
-%         R      = 0.5*(t2./(et + cr11*t2.*(Cr1).*(1-Cr2).*kP).*e./k); 
-%     else
-%         R      = 0.5*(t2./et.*e./k); 
-%     end
-%     fl     = (1 - exp(-Reps./16)).^2.*(1+3./(Rturb.^(3./4)));
-%     fl(1:n-1:n) = 0.0;
-%     
-% %    DNS
-% %    Radiative model functions
-%     
-%     yd = Df(:,1);
-%     wallDistd = min(yd,2-yd);
-%     t2d = Dc(:,2);
-%     etd =-Dc(:,3);
-%     erd =-Dc(:,9);
-%     kd  = Dk(:,2);
-%     ed  =-Dk(:,3);
-%     mud = Dk(:,3)./Dk(:,3)./3750;
-%     rd  = Dm(:,20); 
-%     
-% %    Time and length scales, eddy diffusivity and turbulent production
-%     Repsd   = (mud.*ed).^(1./4)./mud.*wallDistd;
-%     Rturbd  = (kd.^2)./(mud.*ed);
-%     
-% %    Model damping functions
-%     fd1d    = 1 - exp(-(Repsd./1.7)).^2; 
-%     fepsd   = 1 - 0.3*exp(-(Rturbd/6.5).^2);
-%     fd2d   = (1/Cd2)*(Ce2*fepsd - 1).*(1 - exp(-Repsd./5.8).^2); 
-%     
-% %    turbulent diffusivity and production
-%     if RadMod == 1
-%         Rd      = 0.5*(t2d./(etd + abs(erd)).*ed./kd); 
-%     else
-%         Rd      = 0.5*(t2d./etd.*ed./kd); 
-%     end
-%     fld     = (1 - exp(-Repsd./16)).^2.*(1+3./(Rturbd.^(3./4)));
-%     fld(1:length(yd)-1:length(yd)) = 0.0;
-%     
-%     alphatd2 = max(rd.*Cl.*Dm(:,9)./10.*fld.*kd.^2./ed.*(2*Rd).^m,0.0) ;
+
 

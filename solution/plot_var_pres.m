@@ -309,4 +309,4 @@ str4 = '$$\kappa = 0.5\cdot (\kappa_G+\kappa_P)$$';
 legend({str1,str2,str3,str4},'Interpreter','latex','FontSize',12,'location','south');
 legend boxoff
 
-print(fig,strcat(path,'H2O1.eps'),'-depsc')
+print(fig,strcat(path,'H2O2.eps'),'-depsc')

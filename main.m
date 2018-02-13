@@ -484,7 +484,7 @@ plot(Df(:,1),alphatd);
 
 if strcmp(turbPrT,'DWX')
     switch RadMod
-        case 1;   string = strcat('solution/',turbMod,'-',turbPrT,'/',radCase,'_','rad_kP');
+        case 1;   string = strcat('solution/',turbMod,'-',turbPrT,'/',radCase,'_','rad');
         case 0;   string = strcat('solution/',turbMod,'-',turbPrT,'/',radCase);
     end
 else

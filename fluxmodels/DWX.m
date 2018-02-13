@@ -57,7 +57,7 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,kG,ReT,Pr,
     n = size(T,1);
     
     tv       = (mesh.ddy*u).*mu;
-    ut       = sqrt(tv(1)./r(1));
+    ut       = sqrt(tv(1)./r(1)/2-tv(end)./r(end)/2);
     Retau    = ReT.*ut.*r;
     y        = mesh.y;
    	wallDist = min(y, 2-y);
@@ -69,7 +69,7 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,kG,ReT,Pr,
         Cr3 = (cP(6).*5./Tr.^6+cP(5)*4./Tr.^5+cP(4)*3./Tr.^4+cP(3)*2./Tr.^3 ...
             +cP(2)*1./Tr.^2 );
         Cr3 = -(955-573)*Cr3/(ReT*Pr*Pl);
-    else 
+     else 
         Cr3 = zeros(n,1);
     end
     
@@ -93,9 +93,10 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,kG,ReT,Pr,
     cr33 = 7*(ReT/2900).^(2/2);%*(Pr.^(1./2)); %./r.^(1./4);
     WVN  = ((cr33-cr22).*y.^2 - 2*(cr33-cr22).*y +cr33);
     
-    Cr2  = (kG+kP)*0.5./WVN.*atan(WVN./(kG/2+kP/2));
-    
-   
+%     Cr2  = (kG+kP)*0.5./WVN.*atan(WVN./(kG/2+kP/2));
+%     
+    Cr2  = (kP+kP)*0.5./WVN.*atan(WVN./(kP/2+kP/2));
+       
     cr11 = 0.5;
     cret = 1.0;
     
@@ -177,8 +178,8 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,kG,ReT,Pr,
             for i=2:n-1
                 A(i,i) = A(i,i) - 2*kP(i) * Cr1(i)*(1-Cr2(i))...
                 - 2*(Em(i)-G(i)).*Cr3(i);
-                b(i-1) = b(i-1)...
-                + (Em(i)-G(i)).*dCr3dy(i).*dt2dy(i); %... %... %stop here
+    %            b(i-1) = b(i-1)...
+    %            + (Em(i)-G(i)).*dCr3dy(i).*dt2dy(i); %... %... %stop here
     %            + kP(i)*dCRdy(i).*dt2dy(i)...
     %            + Cr3(i).*dQdy(i).*dt2dy(i)...
     %            + Cr1(i).*(1-Cr2(i)).*dkPdy(i)*dt2dy(i);

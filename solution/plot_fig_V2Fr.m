@@ -282,12 +282,12 @@ xlabel('$$y$$','Interpreter','latex','FontSize',18);
 ylabel('$$\overline{v^\prime T^\prime }$$','Interpreter','latex','FontSize',18);
 set(gca,'XMinorTick','on','YMinorTick','on')
 set(gca,'ticklength',TickLength);
-text(1,(yl + max(f_DNS(:,2)))*0.58,'$$\tau=1$$','Interpreter','latex','FontSize',18,'HorizontalAlignment','center');
+text(1,2.5e-04,'$$\tau=1$$','Interpreter','latex','FontSize',18,'HorizontalAlignment','center');
 str1 = 'DNS';
 str2 = 'SA';
 str3 = 'V2F-NO';
 str4 = 'V2F-DW';
-legend({str1,str2,str3,str4},'Interpreter','latex','FontSize',12,'location','south');
+legend({str1,str2,str3,str4},'Interpreter','latex','FontSize',12,'location','northwest');
 legend boxoff
 
 axes(ha1(2))
@@ -305,13 +305,13 @@ ylabel('');
 set(gca,'YTickLabel','')
 set(gca,'XMinorTick','on','YMinorTick','on')
 set(gca,'ticklength',TickLength);
-text(1,(yl + max(f_DNS(:,2)))*0.58,'$$\tau=10$$','Interpreter','latex','FontSize',18,'HorizontalAlignment','center');
+text(1,2.5e-04,'$$\tau=10$$','Interpreter','latex','FontSize',18,'HorizontalAlignment','center');
 str1 = 'DNS';
 str2 = 'SA';
 str3 = 'V2F-NO';
 str4 = 'V2F-DW';
 str5 = 'V2F-DWR';
-legend({str1,str2,str3,str4,str5},'Interpreter','latex','FontSize',12,'location','south');
+legend({str1,str2,str3,str4,str5},'Interpreter','latex','FontSize',12,'location','northwest');
 legend boxoff
 
 print(fig,strcat(path,'Fluxvar_1_10.eps'),'-depsc')

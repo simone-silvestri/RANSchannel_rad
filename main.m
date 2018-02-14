@@ -15,7 +15,6 @@
 close all; 
 clear all;
 
-
 %--------------------------------------------------------------------------
 %       Include folders
 %--------------------------------------------------------------------------
@@ -66,7 +65,7 @@ RadMod = 1;
 % 0 ...  constant kP
 % 1 ...  variable kP
 % 2 ...  variable non-grey k
-kPMod  = 2; 
+kPMod  = 1; 
 % 0 ...  constant rho
 % 1 ...  variable rho
 % 2 ...  rho from DNS
@@ -91,7 +90,7 @@ underrelaxT = 0.9;
 % 2 ... radiative heat source taken from DNS calculations (radCase)
 solveRad = 2;
 stepRad  = 3;
-radCase  = 'H2O';
+radCase  = 't01r';
 
 % -----  channel height  -----
 height = 2;

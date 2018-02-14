@@ -14,7 +14,7 @@
 %    t2-eq:  0 = 2 Pt - 2 et + ddy[(alpha+alphat/sigmat2) dt2dy] - 2kP Emt
 %               +2kP Gt
 %    et-eq:  0 = Cp1 fp1 sqrt(e et/ (k t2)) Pt - Cd1 fd1 et^2 / t2 
-%              - Cd2 fd2 e et / t2 + ddy[(alpha+alphat/sigmaet)detdy] 
+%              - Cd2 fd2 e et / k + ddy[(alpha+alphat/sigmaet)detdy] 
 %              - 2*kP dEm dy dt dy + 2*kP dG dy dt dy
 %
 %    alphat = Cl v2 k^l/e t2^m/et

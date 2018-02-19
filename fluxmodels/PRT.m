@@ -1,4 +1,4 @@
-function [ lam, alphat ] = PRT( mu,mut,alpha,T,r,qy,ReT,MESH,RadMod)
+function [ lam, alphat ] = PRT( mu,mut,alpha,T,r,qy,ReT,Pr,Pl,MESH,RadMod)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -13,14 +13,14 @@ function [ lam, alphat ] = PRT( mu,mut,alpha,T,r,qy,ReT,MESH,RadMod)
     Prt0 = 1./(C1 + C2.*gam - C3.*gam.^2.*(1-exp(-C4./gam)));
     
     
-    if RadMod == 2
-        Prt = r./ReT.*abs(MESH.ddy*T)./abs(qy).*(Prt0+mut.*ReT);
+    if RadMod == 1 && max(mut)<0.008
+        Prt = 1./ReT.*abs(MESH.ddy*T)./abs(qy).*(Prt0+mut*ReT);
     else
         Prt = Prt0;
     end
-    
-    lam    = alpha + mut./Prt;
     alphat = mut./Prt;
+    
+    lam    = alpha + alphat;
     
     
 end

@@ -78,7 +78,9 @@ varDens= 1;
 %       models", Aerosp. Sci. Techn., 2000.  
 compMod = 0;
 
-% -----  solve energy equation  ----- 
+% -----  solve energy equation  ----- figure('Position',[1000 1000 800 600])
+figure('Position',[50 1000 800 600])
+
 % 0 ... energy eq not solved, density and viscosity taken from DNS
 % 1 ... energy eq solved with under relaxation underrelaxT 
 solveEnergy = 1;
@@ -96,7 +98,7 @@ radCase  = 't01r';
 height = 2;
 
 % -----  number of mesh points  -----
-n = 100;
+n = 200;
 % -----  number of angular points  -----
 nT     = 10;                    % number of polar angles
 nP     = 20;                    % number of azimuthal angles
@@ -265,21 +267,21 @@ nResid = 50;                       % interval to print residuals
 residual = 1e20; residualT = 1e20; residualQ = 1e20; iter = 0;
 
 
-% figure('Position',[1000 1000 800 600])
-% figure('Position',[50 1000 800 600])
+figure('Position',[1000 1000 800 600])
+figure('Position',[50 1000 800 600])
 
 while (residual > tol || residualT > tol || residualQ > tol*1e3) && (iter<nmax)
  
-%     if(mod(iter,20)==0)
-%         figure(1)
-%         clf;
-%         plot(MESH.y,T,MESH.y,Tdns);
-%         figure(2)
-%         semilogy(iter/20,residualT,'bo','MarkerSize',6)
-%         ylim([1e-09 1])
-%         hold on
-%         pause(0.00001);
-%     end
+    if(mod(iter,100)==0)
+        figure(1)
+        clf;
+        plot(MESH.y,T,MESH.y,Tdns);
+        figure(2)
+        semilogy(iter/20,residualT,'bo','MarkerSize',6)
+        ylim([1e-09 1])
+        hold on
+        pause(0.00001);
+    end
 
     % Solve turbulence model to calculate eddy viscosity
     switch turbMod
@@ -303,7 +305,7 @@ while (residual > tol || residualT > tol || residualQ > tol*1e3) && (iter<nmax)
         % Solve turbulent flux model to calculate eddy diffusivity 
         switch turbPrT
             case 'V2T'; [uT,lam] = V2T(uT,k,e,v2,mu,ReT,Pr,Pl,T,kP,r,MESH,RadMod);
-            case 'PRT'; [lam,alphat] = PRT( mu,mut,alpha,T,r,qy,ReT,MESH,RadMod);
+            case 'PRT'; [lam,alphat] = PRT( mu,mut,alpha,T,r,qy,ReT,Pr,Pl,MESH,RadMod);
             case 'DWX'; [lam,t2,et,alphat] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,kG,ReT,Pr,Pl,MESH,RadMod,kPMod,cP);
             otherwise;  lam = mu./Pr + (mut./0.9);   
         end
@@ -481,9 +483,9 @@ plot(Df(:,1),alphatd);
 %% ------------------------------------------------------------------------
 %plotting the DNS profiles
 
-if strcmp(turbPrT,'DWX')
+if strcmp(turbPrT,'DWX') || strcmp(turbPrT,'PRT') || strcmp(turbPrT,'V2T')
     switch RadMod
-        case 1;   string = strcat('solution/',turbMod,'-',turbPrT,'/',radCase,'_','rad');
+        case 1;   string = strcat('solution/',turbMod,'-',turbPrT,'/',radCase,'_','rad_P');
         case 0;   string = strcat('solution/',turbMod,'-',turbPrT,'/',radCase);
     end
 else

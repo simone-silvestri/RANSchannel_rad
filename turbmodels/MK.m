@@ -56,13 +56,13 @@ function [k,e,mut] = MK(u,k,e,r,mu,ReT,mesh,compFlag)
     y        = mesh.y;
    	wallDist = min(y, 2-y);
     tv       = mesh.ddy*u;
-    ut       = sqrt(tv(1)/r(1));
-    Retau    = ReT*ut;
+    ut       = sqrt(tv(1)/r(1)/2-tv(end)/r(end)/2);
+    Retau    = ReT*ut.*r;
     
     if(compFlag==1)
         yplus = wallDist*Retau.*sqrt(r/r(1))./(mu/mu(1));
     else
-        yplus = wallDist*ReT;
+        yplus = wallDist.*ReT;
     end
 
     % Model constants

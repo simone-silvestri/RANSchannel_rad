@@ -93,7 +93,7 @@ plot(y,t01_VDN(:,9),'k--');
 plot(y,t01_VDR(:,9),'b-');
 set(gca,'FontSize',14);
 xlabel('$$y$$','Interpreter','latex','FontSize',18);
-ylabel('$$\overline{v^\prime \theta^\prime}$$');
+ylabel('$$\overline{v^\prime \theta^\prime}$$','Interpreter','latex','FontSize',18);
 set(gca,'XMinorTick','on','YMinorTick','on')
 set(gca,'ticklength',TickLength);
 axis([0 2 0 yl]);
@@ -146,7 +146,7 @@ plot(y,t1_VDN(:,9),'k--');
 plot(y,t1_VDR(:,9),'b-');
 set(gca,'FontSize',14);
 xlabel('$$y$$','Interpreter','latex','FontSize',18);
-ylabel('$$\overline{v^\prime \theta^\prime}$$');
+ylabel('$$\overline{v^\prime \theta^\prime}$$','Interpreter','latex','FontSize',18);
 set(gca,'XMinorTick','on','YMinorTick','on')
 set(gca,'ticklength',TickLength);
 axis([0 2 0 yl]);
@@ -199,7 +199,7 @@ plot(y,t10_VDN(:,9),'k--');
 plot(y,t10_VDR(:,9),'b-');
 set(gca,'FontSize',14);
 xlabel('$$y$$','Interpreter','latex','FontSize',18);
-ylabel('$$\overline{v^\prime \theta^\prime}$$');
+ylabel('$$\overline{v^\prime \theta^\prime}$$','Interpreter','latex','FontSize',18);
 set(gca,'XMinorTick','on','YMinorTick','on')
 set(gca,'ticklength',TickLength);
 axis([0 2 0 yl]);
@@ -249,7 +249,7 @@ plot(y,H2O_VN(:,9),'k-.');
 plot(y,H2O_VDN(:,9),'k--');
 set(gca,'FontSize',14);
 xlabel('$$y$$','Interpreter','latex','FontSize',18);
-ylabel('$$\overline{v^\prime \theta^\prime}$$');
+ylabel('$$\overline{v^\prime \theta^\prime}$$','Interpreter','latex','FontSize',18);
 set(gca,'XMinorTick','on','YMinorTick','on')
 set(gca,'ticklength',TickLength);
 axis([0 2 0 yl]);
@@ -273,7 +273,7 @@ pos1 = get(gca,'Position');
 plot(H2Om_DNS(1:2:end,1),H2Om_DNS(1:2:end,5),'ko','MarkerSize',4);
 hold on
 plot(y,H2O_VDRP(:,3),'r-');
-plot(y,H2O_VDRG(:,3),'g-');
+plot(y,H2O_VDRG(:,3),'-','Color',[0 0.7 0]);
 plot(y,H2O_VDR(:,3),'b-');
 set(gca,'FontSize',14);
 xlabel('$$y$$','Interpreter','latex','FontSize',18);
@@ -294,11 +294,11 @@ pos1 = get(gca,'Position');
 plot(H2Of_DNS(1:2:end,1),H2Of_DNS(1:2:end,2),'ko','MarkerSize',4);
 hold on
 plot(y,H2O_VDRP(:,9),'r-');
-plot(y,H2O_VDRG(:,9),'g-');
+plot(y,H2O_VDRG(:,9),'-','Color',[0 0.7 0]);
 plot(y,H2O_VDR(:,9),'b-');
 set(gca,'FontSize',14);
 xlabel('$$y$$','Interpreter','latex','FontSize',18);
-ylabel('$$\overline{v^\prime \theta^\prime}$$');
+ylabel('$$\overline{v^\prime \theta^\prime}$$','Interpreter','latex','FontSize',18);
 set(gca,'XMinorTick','on','YMinorTick','on')
 set(gca,'ticklength',TickLength);
 axis([0 2 0 yl]);

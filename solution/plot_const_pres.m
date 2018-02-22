@@ -6,8 +6,14 @@ clear all
 
 %% IMPORT DATA
 
-path = 'Figures/';
-TickLength = [0.02 0.05];
+
+set(groot, 'defaultAxesTickLabelInterpreter','latex');
+set(groot,'DefaultFigurePosition',[0 0 600 450])
+set(groot,'DefaultFigurePaperUnits','points');
+set(groot,'DefaultFigurePaperPosition',[0 0 1400 350]);
+
+path = '../../articleapsformat/Figures/';
+TickLength = [0.03 0.07];
 
 b_VDN = importdata('V2F-DWX/b');
 b_VN  = importdata('V2F-NO/b');
@@ -75,45 +81,33 @@ yd = t01_DNS(1:2:end,1);
 
 fig=figure('Position',[0 0 1000 450]);
 axp = axes('Position',[0 0 1 1],'Visible','off');
-[ha1,pos1] = tight_subplot(1,2,[0.03 0.08],[0.15 0.1],[0.07 0.07]);
+[ha1,pos1] = tight_subplot(1,2,[0.03 0.1],[0.15 0.1],[0.08 0.02]);
 
 axes(ha1(1))
 pos1 = get(gca,'Position');
-plot(yd,b_DNS(1:2:end,5),'ko','MarkerSize',4);
+plot(yd,b_DNS(1:2:end,5),'ko','MarkerSize',6);
 hold on
-plot(y,b_SN(:,3),'k:');
-plot(y,b_VN(:,3),'k-.');
-plot(y,b_VDN(:,3),'k--');
-set(gca,'FontSize',14);
-xlabel('$$y$$','Interpreter','latex','FontSize',18);
-ylabel('$$\overline{\theta}$$','Interpreter','latex','FontSize',18);
+plot(y,b_SN(:,3),'k:','LineWidth',1);
+plot(y,b_VN(:,3),'k-.','LineWidth',1);
+plot(y,b_VDN(:,3),'k--','LineWidth',1);
+set(gca,'FontSize',20);
+xlabel('B');
+ylabel('A');
 set(gca,'XMinorTick','on','YMinorTick','on')
 set(gca,'ticklength',TickLength);
-str1 = 'DNS';
-str2 = 'SA';
-str3 = 'V2F-NO';
-str4 = 'V2F-DW';
-legend({str1,str2,str3,str4},'Interpreter','latex','FontSize',12,'location','south');
-legend boxoff
 
 axes(ha1(2))
 pos1 = get(gca,'Position');
-plot(yd,f_DNS(1:2:end,2),'ko','MarkerSize',4);
+plot(yd,f_DNS(1:2:end,2),'ko','MarkerSize',6);
 hold on
-plot(y,b_SN(:,9),'k:');
-plot(y,b_VN(:,9),'k-.');
-plot(y,b_VDN(:,9),'k--');
-set(gca,'FontSize',14);
-xlabel('$$y$$','Interpreter','latex','FontSize',18);
-ylabel('$$\overline{v^\prime \theta^\prime}$$');
+plot(y,b_SN(:,9),'k:','LineWidth',1);
+plot(y,b_VN(:,9),'k-.','LineWidth',1);
+plot(y,b_VDN(:,9),'k--','LineWidth',1);
+set(gca,'FontSize',20);
+xlabel('B');
+ylabel('C');
 set(gca,'XMinorTick','on','YMinorTick','on')
 set(gca,'ticklength',TickLength);
-str1 = 'DNS';
-str2 = 'SA';
-str3 = 'V2F-NO';
-str4 = 'V2F-DW';
-legend({str1,str2,str3,str4},'Interpreter','latex','FontSize',12,'location','south');
-legend boxoff
 
 print(fig,strcat(path,'tau0.eps'),'-depsc')
 
@@ -121,49 +115,35 @@ print(fig,strcat(path,'tau0.eps'),'-depsc')
 
 fig=figure('Position',[0 0 1000 450]);
 axp = axes('Position',[0 0 1 1],'Visible','off');
-[ha1,pos1] = tight_subplot(1,2,[0.03 0.08],[0.15 0.1],[0.07 0.07]);
+[ha1,pos1] = tight_subplot(1,2,[0.03 0.1],[0.15 0.1],[0.08 0.02]);
 
 axes(ha1(1))
 pos1 = get(gca,'Position');
-plot(yd,t01_DNS(1:2:end,5),'ko','MarkerSize',4);
+plot(yd,t01_DNS(1:2:end,5),'ko','MarkerSize',6);
 hold on
-plot(y,t01_SN(:,3),'k:');
-plot(y,t01_VN(:,3),'k-.');
-plot(y,t01_VDN(:,3),'k--');
-plot(y,t01_VDR(:,3),'b-');
-set(gca,'FontSize',14);
-xlabel('$$y$$','Interpreter','latex','FontSize',18);
-ylabel('$$\overline{\theta}$$','Interpreter','latex','FontSize',18);
+plot(y,t01_SN(:,3),'k:','LineWidth',1);
+plot(y,t01_VN(:,3),'k-.','LineWidth',1);
+plot(y,t01_VDN(:,3),'k--','LineWidth',1);
+plot(y,t01_VDR(:,3),'b-','LineWidth',1);
+set(gca,'FontSize',20);
+xlabel('B');
+ylabel('A');
 set(gca,'XMinorTick','on','YMinorTick','on')
 set(gca,'ticklength',TickLength);
-str1 = 'DNS';
-str2 = 'SA';
-str3 = 'V2F-NO';
-str4 = 'V2F-DW';
-str5 = 'V2F-DWR';
-legend({str1,str2,str3,str4,str5},'Interpreter','latex','FontSize',12,'location','south');
-legend boxoff
 
 axes(ha1(2))
 pos1 = get(gca,'Position');
-plot(yd,f01_DNS(1:2:end,2),'ko','MarkerSize',4);
+plot(yd,f01_DNS(1:2:end,2),'ko','MarkerSize',6);
 hold on
-plot(y,t01_SN(:,9),'k:');
-plot(y,t01_VN(:,9),'k-.');
-plot(y,t01_VDN(:,9),'k--');
-plot(y,t01_VDR(:,9),'b-');
-set(gca,'FontSize',14);
-xlabel('$$y$$','Interpreter','latex','FontSize',18);
-ylabel('$$\overline{v^\prime \theta^\prime}$$');
+plot(y,t01_SN(:,9),'k:','LineWidth',1);
+plot(y,t01_VN(:,9),'k-.','LineWidth',1);
+plot(y,t01_VDN(:,9),'k--','LineWidth',1);
+plot(y,t01_VDR(:,9),'b-','LineWidth',1);
+set(gca,'FontSize',20);
+xlabel('B');
+ylabel('C');
 set(gca,'XMinorTick','on','YMinorTick','on')
 set(gca,'ticklength',TickLength);
-str1 = 'DNS';
-str2 = 'SA';
-str3 = 'V2F-NO';
-str4 = 'V2F-DW';
-str5 = 'V2F-DWR';
-legend({str1,str2,str3,str4,str5},'Interpreter','latex','FontSize',12,'location','south');
-legend boxoff
 
 print(fig,strcat(path,'tau01.eps'),'-depsc')
 
@@ -172,49 +152,38 @@ print(fig,strcat(path,'tau01.eps'),'-depsc')
 
 fig=figure('Position',[0 0 1000 450]);
 axp = axes('Position',[0 0 1 1],'Visible','off');
-[ha1,pos1] = tight_subplot(1,2,[0.03 0.08],[0.15 0.1],[0.07 0.07]);
+[ha1,pos1] = tight_subplot(1,2,[0.03 0.1],[0.15 0.1],[0.08 0.02]);
 
 axes(ha1(1))
 pos1 = get(gca,'Position');
-plot(yd,t1_DNS(1:2:end,5),'ko','MarkerSize',4);
+plot(yd,t1_DNS(1:2:end,5),'ko','MarkerSize',6);
 hold on
-plot(y,t1_SN(:,3),'k:');
-plot(y,t1_VN(:,3),'k-.');
-plot(y,t1_VDN(:,3),'k--');
-plot(y,t1_VDR(:,3),'b-');
-set(gca,'FontSize',14);
-xlabel('$$y$$','Interpreter','latex','FontSize',18);
-ylabel('$$\overline{\theta}$$','Interpreter','latex','FontSize',18);
+plot(y,t1_SN(:,3),'k:','LineWidth',1);
+plot(y,t1_VN(:,3),'k-.','LineWidth',1);
+plot(y,t1_VDN(:,3),'k--','LineWidth',1);
+plot(y,t1_VDR(:,3),'b-','LineWidth',1);
+set(gca,'FontSize',20);
+xlabel('B');
+ylabel('A');
 set(gca,'XMinorTick','on','YMinorTick','on')
 set(gca,'ticklength',TickLength);
-str1 = 'DNS';
-str2 = 'SA';
-str3 = 'V2F-NO';
-str4 = 'V2F-DW';
-str5 = 'V2F-DWR';
-legend({str1,str2,str3,str4,str5},'Interpreter','latex','FontSize',12,'location','south');
-legend boxoff
+
+yl = max(t1_VDN(:,9))*1.05;
 
 axes(ha1(2))
 pos1 = get(gca,'Position');
-plot(yd,f1_DNS(1:2:end,2),'ko','MarkerSize',4);
+plot(yd,f1_DNS(1:2:end,2),'ko','MarkerSize',6);
 hold on
-plot(y,t1_SN(:,9),'k:');
-plot(y,t1_VN(:,9),'k-.');
-plot(y,t1_VDN(:,9),'k--');
-plot(y,t1_VDR(:,9),'b-');
-set(gca,'FontSize',14);
-xlabel('$$y$$','Interpreter','latex','FontSize',18);
-ylabel('$$\overline{v^\prime \theta^\prime}$$');
+plot(y,t1_SN(:,9),'k:','LineWidth',1);
+plot(y,t1_VN(:,9),'k-.','LineWidth',1);
+plot(y,t1_VDN(:,9),'k--','LineWidth',1);
+plot(y,t1_VDR(:,9),'b-','LineWidth',1);
+set(gca,'FontSize',20);
+axis([0 2 0 yl])
+xlabel('B');
+ylabel('C');
 set(gca,'XMinorTick','on','YMinorTick','on')
 set(gca,'ticklength',TickLength);
-str1 = 'DNS';
-str2 = 'SA';
-str3 = 'V2F-NO';
-str4 = 'V2F-DW';
-str5 = 'V2F-DWR';
-legend({str1,str2,str3,str4,str5},'Interpreter','latex','FontSize',12,'location','south');
-legend boxoff
 
 print(fig,strcat(path,'tau1.eps'),'-depsc')
 
@@ -223,49 +192,38 @@ print(fig,strcat(path,'tau1.eps'),'-depsc')
 
 fig=figure('Position',[0 0 1000 450]);
 axp = axes('Position',[0 0 1 1],'Visible','off');
-[ha1,pos1] = tight_subplot(1,2,[0.03 0.08],[0.15 0.1],[0.07 0.07]);
+[ha1,pos1] = tight_subplot(1,2,[0.03 0.1],[0.15 0.1],[0.08 0.02]);
 
 axes(ha1(1))
 pos1 = get(gca,'Position');
-plot(yd,t1p_DNS(1:2:end,2),'ko','MarkerSize',4);
+plot(yd,t1p_DNS(1:2:end,2),'ko','MarkerSize',6);
 hold on
-plot(y,t1p_SN(:,3),'k:');
-plot(y,t1p_VN(:,3),'k-.');
-plot(y,t1p_VDN(:,3),'k--');
-plot(y,t1p_VDR(:,3),'b-');
-set(gca,'FontSize',14);
-xlabel('$$y$$','Interpreter','latex','FontSize',18);
-ylabel('$$\overline{\theta}$$','Interpreter','latex','FontSize',18);
+plot(y,t1p_SN(:,3),'k:','LineWidth',1);
+plot(y,t1p_VN(:,3),'k-.','LineWidth',1);
+plot(y,t1p_VDN(:,3),'k--','LineWidth',1);
+plot(y,t1p_VDR(:,3),'b-','LineWidth',1);
+set(gca,'FontSize',20);
+xlabel('B');
+ylabel('A');
 set(gca,'XMinorTick','on','YMinorTick','on')
 set(gca,'ticklength',TickLength);
-str1 = 'DNS';
-str2 = 'SA';
-str3 = 'V2F-NO';
-str4 = 'V2F-DW';
-str5 = 'V2F-DWR';
-legend({str1,str2,str3,str4,str5},'Interpreter','latex','FontSize',12,'location','south');
-legend boxoff
+
+yl = max(t1p_VDN(:,9))*1.05;
 
 axes(ha1(2))
 pos1 = get(gca,'Position');
-plot(yd,t1p_DNS(1:2:end,4),'ko','MarkerSize',4);
+plot(yd,t1p_DNS(1:2:end,4),'ko','MarkerSize',6);
 hold on
-plot(y,t1p_SN(:,9),'k:');
-plot(y,t1p_VN(:,9),'k-.');
-plot(y,t1p_VDN(:,9),'k--');
-plot(y,t1p_VDR(:,9),'b-');
-set(gca,'FontSize',14);
-xlabel('$$y$$','Interpreter','latex','FontSize',18);
-ylabel('$$\overline{v^\prime \theta^\prime}$$');
+plot(y,t1p_SN(:,9),'k:','LineWidth',1);
+plot(y,t1p_VN(:,9),'k-.','LineWidth',1);
+plot(y,t1p_VDN(:,9),'k--','LineWidth',1);
+plot(y,t1p_VDR(:,9),'b-','LineWidth',1);
+set(gca,'FontSize',20);
+axis([0 2 0 yl])
+xlabel('B');
+ylabel('C');
 set(gca,'XMinorTick','on','YMinorTick','on')
 set(gca,'ticklength',TickLength);
-str1 = 'DNS';
-str2 = 'SA';
-str3 = 'V2F-NO';
-str4 = 'V2F-DW';
-str5 = 'V2F-DWR';
-legend({str1,str2,str3,str4,str5},'Interpreter','latex','FontSize',12,'location','south');
-legend boxoff
 
 print(fig,strcat(path,'tau1p.eps'),'-depsc')
 
@@ -273,52 +231,38 @@ print(fig,strcat(path,'tau1p.eps'),'-depsc')
 
 fig=figure('Position',[0 0 1000 450]);
 axp = axes('Position',[0 0 1 1],'Visible','off');
-[ha1,pos1] = tight_subplot(1,2,[0.03 0.08],[0.15 0.1],[0.07 0.07]);
+[ha1,pos1] = tight_subplot(1,2,[0.03 0.1],[0.15 0.1],[0.08 0.02]);
 
 axes(ha1(1))
 pos1 = get(gca,'Position');
-plot(yd,t5_DNS(1:2:end,5),'ko','MarkerSize',4);
+plot(yd,t5_DNS(1:2:end,5),'ko','MarkerSize',6);
 hold on
-plot(y,t5_SN(:,3),'k:');
-plot(y,t5_VN(:,3),'k-.');
-plot(y,t5_VDN(:,3),'k--');
-plot(y,t5_VDR(:,3),'b-');
-set(gca,'FontSize',14);
-xlabel('$$y$$','Interpreter','latex','FontSize',18);
-ylabel('$$\overline{\theta}$$','Interpreter','latex','FontSize',18);
+plot(y,t5_SN(:,3),'k:','LineWidth',1);
+plot(y,t5_VN(:,3),'k-.','LineWidth',1);
+plot(y,t5_VDN(:,3),'k--','LineWidth',1);
+plot(y,t5_VDR(:,3),'b-','LineWidth',1);
+set(gca,'FontSize',20);
+xlabel('B');
+ylabel('A');
 set(gca,'XMinorTick','on','YMinorTick','on')
 set(gca,'ticklength',TickLength);
-str1 = 'DNS';
-str2 = 'SA';
-str3 = 'V2F-NO';
-str4 = 'V2F-DW';
-str5 = 'V2F-DWR';
-legend({str1,str2,str3,str4,str5},'Interpreter','latex','FontSize',12,'location','south');
-legend boxoff
 
 yl = max(t5_VDN(:,9))*1.05;
 
 axes(ha1(2))
 pos1 = get(gca,'Position');
-plot(yd,f5_DNS(1:2:end,2),'ko','MarkerSize',4);
+plot(yd,f5_DNS(1:2:end,2),'ko','MarkerSize',6);
 hold on
-plot(y,t5_SN(:,9),'k:');
-plot(y,t5_VN(:,9),'k-.');
-plot(y,t5_VDN(:,9),'k--');
-plot(y,t5_VDR(:,9),'b-');
-set(gca,'FontSize',14);
-xlabel('$$y$$','Interpreter','latex','FontSize',18);
-ylabel('$$\overline{v^\prime \theta^\prime}$$');
+plot(y,t5_SN(:,9),'k:','LineWidth',1);
+plot(y,t5_VN(:,9),'k-.','LineWidth',1);
+plot(y,t5_VDN(:,9),'k--','LineWidth',1);
+plot(y,t5_VDR(:,9),'b-','LineWidth',1);
+set(gca,'FontSize',20);
+xlabel('B');
+ylabel('C');
 axis([0 2 0 yl]);
 set(gca,'XMinorTick','on','YMinorTick','on')
 set(gca,'ticklength',TickLength);
-str1 = 'DNS';
-str2 = 'SA';
-str3 = 'V2F-NO';
-str4 = 'V2F-DW';
-str5 = 'V2F-DWR';
-legend({str1,str2,str3,str4,str5},'Interpreter','latex','FontSize',12,'location','south');
-legend boxoff
 
 print(fig,strcat(path,'tau5.eps'),'-depsc')
 
@@ -326,52 +270,38 @@ print(fig,strcat(path,'tau5.eps'),'-depsc')
 
 fig=figure('Position',[0 0 1000 450]);
 axp = axes('Position',[0 0 1 1],'Visible','off');
-[ha1,pos1] = tight_subplot(1,2,[0.03 0.08],[0.15 0.1],[0.07 0.07]);
+[ha1,pos1] = tight_subplot(1,2,[0.03 0.1],[0.15 0.1],[0.08 0.02]);
 
 axes(ha1(1))
 pos1 = get(gca,'Position');
-plot(yd,t10_DNS(1:2:end,5),'ko','MarkerSize',4);
+plot(yd,t10_DNS(1:2:end,5),'ko','MarkerSize',6);
 hold on
-plot(y,t10_SN(:,3),'k:');
-plot(y,t10_VN(:,3),'k-.');
-plot(y,t10_VDN(:,3),'k--');
-plot(y,t10_VDR(:,3),'b-');
-set(gca,'FontSize',14);
-xlabel('$$y$$','Interpreter','latex','FontSize',18);
-ylabel('$$\overline{\theta}$$','Interpreter','latex','FontSize',18);
+plot(y,t10_SN(:,3),'k:','LineWidth',1);
+plot(y,t10_VN(:,3),'k-.','LineWidth',1);
+plot(y,t10_VDN(:,3),'k--','LineWidth',1);
+plot(y,t10_VDR(:,3),'b-','LineWidth',1);
+set(gca,'FontSize',20);
+xlabel('B');
+ylabel('A');
 set(gca,'XMinorTick','on','YMinorTick','on')
 set(gca,'ticklength',TickLength);
-str1 = 'DNS';
-str2 = 'SA';
-str3 = 'V2F-NO';
-str4 = 'V2F-DW';
-str5 = 'V2F-DWR';
-legend({str1,str2,str3,str4,str5},'Interpreter','latex','FontSize',12,'location','south');
-legend boxoff
 
 yl = max(t10_VDN(:,9))*1.05;
 
 axes(ha1(2))
 pos1 = get(gca,'Position');
-plot(yd,f10_DNS(1:2:end,2),'ko','MarkerSize',4);
+plot(yd,f10_DNS(1:2:end,2),'ko','MarkerSize',6);
 hold on
-plot(y,t10_SN(:,9),'k:');
-plot(y,t10_VN(:,9),'k-.');
-plot(y,t10_VDN(:,9),'k--');
-plot(y,t10_VDR(:,9),'b-');
-set(gca,'FontSize',14);
-xlabel('$$y$$','Interpreter','latex','FontSize',18);
-ylabel('$$\overline{v^\prime \theta^\prime}$$');
+plot(y,t10_SN(:,9),'k:','LineWidth',1);
+plot(y,t10_VN(:,9),'k-.','LineWidth',1);
+plot(y,t10_VDN(:,9),'k--','LineWidth',1);
+plot(y,t10_VDR(:,9),'b-','LineWidth',1);
+set(gca,'FontSize',20);
+xlabel('B');
+ylabel('C');
 axis([0 2 0 yl]);
 set(gca,'XMinorTick','on','YMinorTick','on')
 set(gca,'ticklength',TickLength);
-str1 = 'DNS';
-str2 = 'SA';
-str3 = 'V2F-NO';
-str4 = 'V2F-DW';
-str5 = 'V2F-DWR';
-legend({str1,str2,str3,str4,str5},'Interpreter','latex','FontSize',12,'location','south');
-legend boxoff
 
 print(fig,strcat(path,'tau10.eps'),'-depsc')
 
@@ -379,52 +309,38 @@ print(fig,strcat(path,'tau10.eps'),'-depsc')
 
 fig=figure('Position',[0 0 1000 450]);
 axp = axes('Position',[0 0 1 1],'Visible','off');
-[ha1,pos1] = tight_subplot(1,2,[0.03 0.08],[0.15 0.1],[0.07 0.07]);
+[ha1,pos1] = tight_subplot(1,2,[0.03 0.1],[0.15 0.1],[0.08 0.02]);
 
 axes(ha1(1))
 pos1 = get(gca,'Position');
-plot(yd,t10p_DNS(1:2:end,2),'ko','MarkerSize',4);
+plot(yd,t10p_DNS(1:2:end,2),'ko','MarkerSize',6);
 hold on
-plot(y,t10p_SN(:,3),'k:');
-plot(y,t10p_VN(:,3),'k-.');
-plot(y,t10p_VDN(:,3),'k--');
-plot(y,t10p_VDR(:,3),'b-');
-set(gca,'FontSize',14);
-xlabel('$$y$$','Interpreter','latex','FontSize',18);
-ylabel('$$\overline{\theta}$$','Interpreter','latex','FontSize',18);
+plot(y,t10p_SN(:,3),'k:','LineWidth',1);
+plot(y,t10p_VN(:,3),'k-.','LineWidth',1);
+plot(y,t10p_VDN(:,3),'k--','LineWidth',1);
+plot(y,t10p_VDR(:,3),'b-','LineWidth',1);
+set(gca,'FontSize',20);
+xlabel('B');
+ylabel('A');
 set(gca,'XMinorTick','on','YMinorTick','on')
 set(gca,'ticklength',TickLength);
-str1 = 'DNS';
-str2 = 'SA';
-str3 = 'V2F-NO';
-str4 = 'V2F-DW';
-str5 = 'V2F-DWR';
-legend({str1,str2,str3,str4,str5},'Interpreter','latex','FontSize',12,'location','south');
-legend boxoff
 
 yl = max(t10p_VDN(:,9))*1.05;
 
 axes(ha1(2))
 pos1 = get(gca,'Position');
-plot(yd,t10p_DNS(1:2:end,4),'ko','MarkerSize',4);
+plot(yd,t10p_DNS(1:2:end,4),'ko','MarkerSize',6);
 hold on
-plot(y,t10p_SN(:,9),'k:');
-plot(y,t10p_VN(:,9),'k-.');
-plot(y,t10p_VDN(:,9),'k--');
-plot(y,t10p_VDR(:,9),'b-');
-set(gca,'FontSize',14);
-xlabel('$$y$$','Interpreter','latex','FontSize',18);
-ylabel('$$\overline{v^\prime \theta^\prime}$$');
+plot(y,t10p_SN(:,9),'k:','LineWidth',1);
+plot(y,t10p_VN(:,9),'k-.','LineWidth',1);
+plot(y,t10p_VDN(:,9),'k--','LineWidth',1);
+plot(y,t10p_VDR(:,9),'b-','LineWidth',1);
+set(gca,'FontSize',20);
+xlabel('B');
+ylabel('C');
 set(gca,'XMinorTick','on','YMinorTick','on')
 axis([0 2 0 yl]);
 set(gca,'ticklength',TickLength);
-str1 = 'DNS';
-str2 = 'SA';
-str3 = 'V2F-NO';
-str4 = 'V2F-DW';
-str5 = 'V2F-DWR';
-legend({str1,str2,str3,str4,str5},'Interpreter','latex','FontSize',12,'location','south');
-legend boxoff
 
 print(fig,strcat(path,'tau10p.eps'),'-depsc')
 
@@ -432,51 +348,37 @@ print(fig,strcat(path,'tau10p.eps'),'-depsc')
 
 fig=figure('Position',[0 0 1000 450]);
 axp = axes('Position',[0 0 1 1],'Visible','off');
-[ha1,pos1] = tight_subplot(1,2,[0.03 0.08],[0.15 0.1],[0.07 0.07]);
+[ha1,pos1] = tight_subplot(1,2,[0.03 0.1],[0.15 0.1],[0.08 0.02]);
 
 axes(ha1(1))
 pos1 = get(gca,'Position');
-plot(yd,t20_DNS(1:2:end,5),'ko','MarkerSize',4);
+plot(yd,t20_DNS(1:2:end,5),'ko','MarkerSize',6);
 hold on
-plot(y,t20_SN(:,3),'k:');
-plot(y,t20_VN(:,3),'k-.');
-plot(y,t20_VDN(:,3),'k--');
-plot(y,t20_VDR(:,3),'b-');
-set(gca,'FontSize',14);
-xlabel('$$y$$','Interpreter','latex','FontSize',18);
-ylabel('$$\overline{\theta}$$','Interpreter','latex','FontSize',18);
+plot(y,t20_SN(:,3),'k:','LineWidth',1);
+plot(y,t20_VN(:,3),'k-.','LineWidth',1);
+plot(y,t20_VDN(:,3),'k--','LineWidth',1);
+plot(y,t20_VDR(:,3),'b-','LineWidth',1);
+set(gca,'FontSize',20);
+xlabel('B');
+ylabel('A');
 set(gca,'XMinorTick','on','YMinorTick','on')
 set(gca,'ticklength',TickLength);
-str1 = 'DNS';
-str2 = 'SA';
-str3 = 'V2F-NO';
-str4 = 'V2F-DW';
-str5 = 'V2F-DWR';
-legend({str1,str2,str3,str4,str5},'Interpreter','latex','FontSize',12,'location','south');
-legend boxoff
 
 yl = max(t20_VDN(:,9))*1.05;
 
 axes(ha1(2))
 pos1 = get(gca,'Position');
-plot(yd,f20_DNS(1:2:end,2),'ko','MarkerSize',4);
+plot(yd,f20_DNS(1:2:end,2),'ko','MarkerSize',6);
 hold on
-plot(y,t20_SN(:,9),'k:');
-plot(y,t20_VN(:,9),'k-.');
-plot(y,t20_VDN(:,9),'k--');
-plot(y,t20_VDR(:,9),'b-');
-set(gca,'FontSize',14);
-xlabel('$$y$$','Interpreter','latex','FontSize',18);
-ylabel('$$\overline{v^\prime \theta^\prime}$$');
+plot(y,t20_SN(:,9),'k:','LineWidth',1);
+plot(y,t20_VN(:,9),'k-.','LineWidth',1);
+plot(y,t20_VDN(:,9),'k--','LineWidth',1);
+plot(y,t20_VDR(:,9),'b-','LineWidth',1);
+set(gca,'FontSize',20);
+xlabel('B');
+ylabel('C');
 axis([0 2 0 yl]);
 set(gca,'XMinorTick','on','YMinorTick','on')
 set(gca,'ticklength',TickLength);
-str1 = 'DNS';
-str2 = 'SA';
-str3 = 'V2F-NO';
-str4 = 'V2F-DW';
-str5 = 'V2F-DWR';
-legend({str1,str2,str3,str4,str5},'Interpreter','latex','FontSize',12,'location','south');
-legend boxoff
 
 print(fig,strcat(path,'tau20.eps'),'-depsc')

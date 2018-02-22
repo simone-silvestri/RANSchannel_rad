@@ -93,10 +93,9 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,kG,ReT,Pr,
     cr33 = 7*(ReT/2900).^(2/2);%*(Pr.^(1./2)); %./r.^(1./4);
     WVN  = ((cr33-cr22).*y.^2 - 2*(cr33-cr22).*y +cr33);
     
-    Cr2  = (kG+kP)*0.5./WVN.*atan(WVN./(kG/2+kP/2))...
-         + (Em - G).*Cr3.*(2./(WVN.*(kG+kP)*0.5).*atan(WVN./((kG+kP)*0.5)));
+    Cr2  = (kG+kP)*0.5./WVN.*atan(WVN./(kG/2+kP/2));
 %     
-%    Cr2  = sqrt(kG.*kG)./WVN.*atan(WVN./sqrt(kG.*kG));
+%     Cr2  = sqrt(kG./WVN.*atan(WVN./kG) .* kP./WVN.*atan(WVN./kP));
        
     cr11 = 0.5;
     cret = 1.0;
@@ -187,8 +186,8 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,kG,ReT,Pr,
             end
         else
             for i=2:n-1
-                A(i,i) = A(i,i)- 2*kP(i).* Cr1(i)  .*(1-Cr2(i));
-                %- kP(i).* dCRdy(i).* dt2dy(i)/et(i);
+                A(i,i) = A(i,i)- 2*kP(i).* Cr1(i)  .*(1-Cr2(i)); % ...
+                %- kP(i).* dCRdy(i).* dt2dy(i)./et(i);
                 %b(i-1) = b(i-1) +   kP(i).* dCRdy(i).* dt2dy(i);
             end
         end

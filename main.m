@@ -46,7 +46,7 @@ addpath('radiation');           % functions for the radiative calculations
 %           transfer on turbine blades", ASME, J. Turbomach. 2012.
 % 'DNS' ... without turbulence model; k,e,u taken from DNS solution
 % 'NO'  ... without turbulence model; laminar
-turbMod = 'V2F';
+turbMod = 'SA';
 
 % -----  choose flux model  -----
 % '1EQ'... Cess, R.D., "A survery of the literature on heat transfer in 
@@ -56,7 +56,7 @@ turbMod = 'V2F';
 % 'PRT'  ... Myong, H.K. and Kasagi, N., "A new approach to the improvement of
 %           k-epsilon turbulence models for wall bounded shear flow", JSME 
 %           Internationla Journal, 1990.
-turbPrT = 'DWX';
+turbPrT = 'NO';
 
 % -----  choose Radiation model modification -----
 % 0 ...  Conventional t2 - et equations
@@ -98,7 +98,7 @@ radCase  = 't01r';
 height = 2;
 
 % -----  number of mesh points  -----
-n = 200;
+n = 100;
 % -----  number of angular points  -----
 nT     = 10;                    % number of polar angles
 nP     = 20;                    % number of azimuthal angles
@@ -479,6 +479,15 @@ plot(Df(:,1),Df(:,2));
 figure(5); hold off
 plot(y,alphat); hold on
 plot(Df(:,1),alphatd);
+
+%% Calculation of conductive heat transfer
+
+CHF = alpha.*(-MESH.ddy*T);
+CHFD = alpha.*(-MESH.ddy*Tdns);
+diff = (CHF - CHFD)./CHFD;
+
+fprintf('The HF in this case is: %12.6e %12.6e\n\n',diff(1),diff(2));
+
 
 %% ------------------------------------------------------------------------
 %plotting the DNS profiles

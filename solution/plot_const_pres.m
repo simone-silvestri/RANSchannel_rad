@@ -38,11 +38,13 @@ t1_DNS = importdata('DNS/t1m');
 f1_DNS = importdata('DNS/t1f');
 c1_DNS = importdata('DNS/t1c');
 
-t1p_VDR = importdata('V2F-DWX/t107_rad');
-t1p_VDN = importdata('V2F-DWX/t107');
-t1p_VN  = importdata('V2F-NO/t107');
-t1p_SN  = importdata('SA-NO/t107');
-t1p_DNS = importdata('../pref_temp_1');
+t1p_VDR = importdata('V2F-DWX/t1p_rad');
+t1p_VDN = importdata('V2F-DWX/t1p');
+t1p_VN  = importdata('V2F-NO/t1p');
+t1p_SN  = importdata('SA-NO/t1p');
+t1p_DNS = importdata('DNS/t1pm');
+f1p_DNS = importdata('DNS/t1pf');
+c1p_DNS = importdata('DNS/t1pc');
 
 t5_VDR = importdata('V2F-DWX/t5_rad');
 t5_VDN = importdata('V2F-DWX/t5');
@@ -60,11 +62,13 @@ t10_DNS = importdata('DNS/t10m');
 f10_DNS = importdata('DNS/t10f');
 c10_DNS = importdata('DNS/t10c');
 
-t10p_VDR = importdata('V2F-DWX/t1007_rad');
-t10p_VDN = importdata('V2F-DWX/t1007');
-t10p_VN  = importdata('V2F-NO/t1007');
-t10p_SN  = importdata('SA-NO/t1007');
-t10p_DNS = importdata('../pref_temp_10');
+t10p_VDR = importdata('V2F-DWX/t10p_rad');
+t10p_VDN = importdata('V2F-DWX/t10p');
+t10p_VN  = importdata('V2F-NO/t10p');
+t10p_SN  = importdata('SA-NO/t10p');
+t10p_DNS = importdata('DNS/t10pm');
+f10p_DNS = importdata('DNS/t10pf');
+c10p_DNS = importdata('DNS/t10pc');
 
 t20_VDR = importdata('V2F-DWX/t20_rad');
 t20_VDN = importdata('V2F-DWX/t20');
@@ -196,7 +200,7 @@ axp = axes('Position',[0 0 1 1],'Visible','off');
 
 axes(ha1(1))
 pos1 = get(gca,'Position');
-plot(yd,t1p_DNS(1:2:end,2),'ko','MarkerSize',6);
+plot(yd,t1p_DNS(1:2:end,5),'ko','MarkerSize',6);
 hold on
 plot(y,t1p_SN(:,3),'k:','LineWidth',1);
 plot(y,t1p_VN(:,3),'k-.','LineWidth',1);
@@ -212,7 +216,7 @@ yl = max(t1p_VDN(:,9))*1.05;
 
 axes(ha1(2))
 pos1 = get(gca,'Position');
-plot(yd,t1p_DNS(1:2:end,4),'ko','MarkerSize',6);
+plot(yd,f1p_DNS(1:2:end,2),'ko','MarkerSize',6);
 hold on
 plot(y,t1p_SN(:,9),'k:','LineWidth',1);
 plot(y,t1p_VN(:,9),'k-.','LineWidth',1);
@@ -313,7 +317,7 @@ axp = axes('Position',[0 0 1 1],'Visible','off');
 
 axes(ha1(1))
 pos1 = get(gca,'Position');
-plot(yd,t10p_DNS(1:2:end,2),'ko','MarkerSize',6);
+plot(yd,t10p_DNS(1:2:end,5),'ko','MarkerSize',6);
 hold on
 plot(y,t10p_SN(:,3),'k:','LineWidth',1);
 plot(y,t10p_VN(:,3),'k-.','LineWidth',1);
@@ -329,7 +333,7 @@ yl = max(t10p_VDN(:,9))*1.05;
 
 axes(ha1(2))
 pos1 = get(gca,'Position');
-plot(yd,t10p_DNS(1:2:end,4),'ko','MarkerSize',6);
+plot(yd,f10p_DNS(1:2:end,2),'ko','MarkerSize',6);
 hold on
 plot(y,t10p_SN(:,9),'k:','LineWidth',1);
 plot(y,t10p_VN(:,9),'k-.','LineWidth',1);

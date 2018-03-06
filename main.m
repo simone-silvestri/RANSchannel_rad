@@ -46,7 +46,7 @@ addpath('radiation');           % functions for the radiative calculations
 %           transfer on turbine blades", ASME, J. Turbomach. 2012.
 % 'DNS' ... without turbulence model; k,e,u taken from DNS solution
 % 'NO'  ... without turbulence model; laminar
-turbMod = 'SA';
+turbMod = 'V2F';
 
 % -----  choose flux model  -----
 % '1EQ'... Cess, R.D., "A survery of the literature on heat transfer in 
@@ -61,15 +61,15 @@ turbPrT = 'NO';
 % -----  choose Radiation model modification -----
 % 0 ...  Conventional t2 - et equations
 % 1 ...  Radiative source term in t2 and et equations
-RadMod = 1;
+RadMod = 0;
 % 0 ...  constant kP
 % 1 ...  variable kP
 % 2 ...  variable non-grey k
-kPMod  = 1; 
+kPMod  = 0; 
 % 0 ...  constant rho
 % 1 ...  variable rho
 % 2 ...  rho from DNS
-varDens= 1;
+varDens= 0;
 
 % -----  compressible modification  -----
 % 0 ... Conventional models without compressible modifications
@@ -92,7 +92,7 @@ underrelaxT = 0.9;
 % 2 ... radiative heat source taken from DNS calculations (radCase)
 solveRad = 2;
 stepRad  = 3;
-radCase  = 't01r';
+radCase  = 't1';
 
 % -----  channel height  -----
 height = 2;
@@ -171,12 +171,15 @@ DNSt=importdata('profProp');
 if solveRad == 1 
     I     = zeros(n+1,nT,nP);
     QR    = zeros(n,1);
+    Em    = zeros(n,1);
+    G    = zeros(n,1);
     qy    = zeros(n,1);
     QRint = zeros(n+1,1);
     Tint  = zeros(n+1,1);
     qyint = zeros(n+1,1);
     Sc    = zeros(n+1,5,5,nT,nP);
-    kP    = interp1(Dm(:,1),Dm(:,9),ANG.y,'spline');
+    kPint = interp1(Dm(:,1),Dm(:,9),ANG.y,'spline');
+    kP    = interp1(Dm(:,1),Dm(:,9),MESH.y,'spline');
 elseif solveRad == 2
      if kPMod == 2
         QR    = interp1(Dm(:,1),Dm(:,7),MESH.y,'spline');
@@ -332,11 +335,12 @@ while (residual > tol || residualT > tol || residualQ > tol*1e3) && (iter<nmax)
              Tint(1) = T(1);
              if (mod(iter,stepRad) == 0)
                  Q_old                = QR;
-                 [I, Sc]              = radiation(Tint,kP,Sc,I,ANG,n);
+                 [I, Sc]              = radiation(Tint,kPint,Sc,I,ANG,n);
                  [QRint, qyint, Gint] = radint(I,ANG,kP,Tint,n);
                  QR                   = interp1(ANG.y(2:n),QRint(2:n),MESH.y,'spline');
                  qy                   = interp1(ANG.y(2:n),qyint(2:n),MESH.y,'spline');
                  G                    = interp1(ANG.y(2:n),Gint(2:n) ,MESH.y,'spline');
+                 Em                   = QR./kP + G;
                  residualQ            = norm(QR-Q_old);
              end
          else
@@ -486,7 +490,7 @@ CHF = alpha.*(-MESH.ddy*T);
 CHFD = alpha.*(-MESH.ddy*Tdns);
 diff = (CHF - CHFD)./CHFD;
 
-fprintf('The HF in this case is: %12.6e %12.6e\n\n',diff(1),diff(2));
+fprintf('The HF in this case is: %12.6e %12.6e\n\n',diff(1),diff(end));
 
 
 %% ------------------------------------------------------------------------
@@ -494,7 +498,7 @@ fprintf('The HF in this case is: %12.6e %12.6e\n\n',diff(1),diff(2));
 
 if strcmp(turbPrT,'DWX') || strcmp(turbPrT,'PRT') || strcmp(turbPrT,'V2T')
     switch RadMod
-        case 1;   string = strcat('solution/',turbMod,'-',turbPrT,'/',radCase,'_','rad_P');
+        case 1;   string = strcat('solution/',turbMod,'-',turbPrT,'/',radCase,'_','rad');
         case 0;   string = strcat('solution/',turbMod,'-',turbPrT,'/',radCase);
     end
 else

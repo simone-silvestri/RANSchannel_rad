@@ -58,6 +58,7 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,kG,ReT,Pr,
     
     tv       = (mesh.ddy*u).*mu;
     ut       = sqrt(tv(1)./r(1)/2-tv(end)./r(end)/2);
+    %ut       = sqrt(tv(1)./r);
     Retau    = ReT.*ut.*r;
     y        = mesh.y;
    	wallDist = min(y, 2-y);
@@ -89,11 +90,11 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,kG,ReT,Pr,
     Cr1  = (16/1.5^4*T.^3 + 48/1.5^3*T.^2 + 48/1.5^2*T + 16/1.5)/(ReT*Pr*Pl); 
     
     % Radiative model functions
-    cr22 = 7*(ReT/2900).^(2/2);%*(Pr.^(1./2)); %./r.^(1./4);
-    cr33 = 7*(ReT/2900).^(2/2);%*(Pr.^(1./2)); %./r.^(1./4);
+    cr22 = 7*(ReT/2900).^(2/2); %/(Pr.^(1./2)); %./r.^(1./4);
+    cr33 = 7*(ReT/2900).^(2/2); %/(Pr.^(1./2)); %./r.^(1./4);
     WVN  = ((cr33-cr22).*y.^2 - 2*(cr33-cr22).*y +cr33);
     
-    Cr2  = (kG+kP)*0.5./WVN.*atan(WVN./(kG/2+kP/2));
+    Cr2  = (kP+kP)*0.5./WVN.*atan(WVN./(kP/2+kP/2));
 %     
 %     Cr2  = sqrt(kG./WVN.*atan(WVN./kG) .* kP./WVN.*atan(WVN./kP));
        
@@ -139,7 +140,7 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,kG,ReT,Pr,
     %        - Cd2 fd2 e et / t2 + ddy[(alpha+alphat/sigmaet)detdy]    
     
     % effective diffusivity
-    lam = alpha + alphat./siget;
+    lam = alpha./r + alphat./siget./r;
     
     % diffusion matrix: lam*d2()/dy2 + dlam/dy d()/dy
     A =   bsxfun(@times, lam, mesh.d2dy2) ... 
@@ -172,23 +173,22 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,kG,ReT,Pr,
             end
         end
         if(kPMod~=0)
-            dQdy    = (mesh.ddy*Em)-(mesh.ddy*G.*kG./kP);
+            dQdy    = (mesh.ddy*(Em./r))-(mesh.ddy*(G./r));
             dCr3dy  = (mesh.ddy*Cr3);
-            dkPdy   = (mesh.ddy*kP);
+            dkPdy   = (mesh.ddy*(kP./r));
             for i=2:n-1
                 A(i,i) = A(i,i) - 2*kP(i) * Cr1(i)*(1-Cr2(i))...
                 - 2*(Em(i)-G(i)).*Cr3(i);
-    %            b(i-1) = b(i-1)...
-    %            + (Em(i)-G(i)).*dCr3dy(i).*dt2dy(i); %... %... %stop here
-    %            + kP(i)*dCRdy(i).*dt2dy(i)...
-    %            + Cr3(i).*dQdy(i).*dt2dy(i)...
-    %            + Cr1(i).*(1-Cr2(i)).*dkPdy(i)*dt2dy(i);
+                b(i-1) = b(i-1)...
+                + (Em(i)-G(i)).*dCr3dy(i).*dt2dy(i)/ReT/Pr/r(i)... 
+                + kP(i)*dCRdy(i).*dt2dy(i)/ReT/Pr/r(i)...
+                + Cr3(i).*dQdy(i).*dt2dy(i)/ReT/Pr...
+                + Cr1(i).*(1-Cr2(i)).*dkPdy(i)*dt2dy(i)/ReT/Pr;
             end
         else
             for i=2:n-1
-                A(i,i) = A(i,i)- 2*kP(i).* Cr1(i)  .*(1-Cr2(i)); % ...
-                %- kP(i).* dCRdy(i).* dt2dy(i)./et(i);
-                %b(i-1) = b(i-1) +   kP(i).* dCRdy(i).* dt2dy(i);
+                A(i,i) = A(i,i)- 2*kP(i).* Cr1(i)  .*(1-Cr2(i)); 
+                b(i-1) = b(i-1) +   kP(i).* dCRdy(i).* dt2dy(i)/ReT/Pr;
             end
         end
     end

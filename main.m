@@ -46,7 +46,7 @@ addpath('radiation');           % functions for the radiative calculations
 %           transfer on turbine blades", ASME, J. Turbomach. 2012.
 % 'DNS' ... without turbulence model; k,e,u taken from DNS solution
 % 'NO'  ... without turbulence model; laminar
-turbMod = 'V2F';
+turbMod = 'MK';
 
 % -----  choose flux model  -----
 % '1EQ'... Cess, R.D., "A survery of the literature on heat transfer in 
@@ -56,20 +56,20 @@ turbMod = 'V2F';
 % 'PRT'  ... Myong, H.K. and Kasagi, N., "A new approach to the improvement of
 %           k-epsilon turbulence models for wall bounded shear flow", JSME 
 %           Internationla Journal, 1990.
-turbPrT = 'NO';
+turbPrT = 'DWX';
 
 % -----  choose Radiation model modification -----
 % 0 ...  Conventional t2 - et equations
 % 1 ...  Radiative source term in t2 and et equations
-RadMod = 0;
+RadMod = 1;
 % 0 ...  constant kP
 % 1 ...  variable kP
 % 2 ...  variable non-grey k
-kPMod  = 0; 
+kPMod  = 2; 
 % 0 ...  constant rho
 % 1 ...  variable rho
 % 2 ...  rho from DNS
-varDens= 0;
+varDens= 1;
 
 % -----  compressible modification  -----
 % 0 ... Conventional models without compressible modifications
@@ -92,7 +92,7 @@ underrelaxT = 0.9;
 % 2 ... radiative heat source taken from DNS calculations (radCase)
 solveRad = 2;
 stepRad  = 3;
-radCase  = 't1';
+radCase  = 'H2O';
 
 % -----  channel height  -----
 height = 2;
@@ -289,7 +289,7 @@ while (residual > tol || residualT > tol || residualQ > tol*1e3) && (iter<nmax)
     % Solve turbulence model to calculate eddy viscosity
     switch turbMod
         case 'V2F';   [k,e,v2,mut] = V2F(u,k,e,v2,r,mu,MESH,compMod);
-        case 'MK';    [k,e,mut]    = MK(u,k,e,r,mu,ReT,MESH,compMod);
+        case 'MK';    [k,e,mut]    = MK(u,k,e,r,mu,ReT,MESH,compMod,iter);
         case 'SST';   [k,om,mut]   = KOmSST(u,k,om,r,mu,MESH,compMod);
         case 'SA';    [nuSA,mut]   = SA(u,nuSA,r,mu,MESH,compMod);
         case 'Cess';  mut          = Cess(r,mu,ReT,MESH,compMod);
@@ -492,6 +492,13 @@ diff = (CHF - CHFD)./CHFD;
 
 fprintf('The HF in this case is: %12.6e %12.6e\n\n',diff(1),diff(end));
 
+%% Calculation of the Nusselt number
+
+udns = interp1(Dm(:,1),Dm(:,4),MESH.y,'spline');
+Tb = trapz(y,Tdns.*udns)/trapz(y,udns);
+
+Nu = -1./(Tb - 1).*interp1(MESH.y,CHFD,0.5,'spline');
+fprintf('The Nusselt number in this case is: %12.6e\n\n',Nu);
 
 %% ------------------------------------------------------------------------
 %plotting the DNS profiles

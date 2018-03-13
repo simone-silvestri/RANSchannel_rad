@@ -50,19 +50,23 @@
 %   e           solved turbulent kinetic energy dissipation rate per unit
 %               volume
 
-function [k,e,mut] = MK(u,k,e,r,mu,ReT,mesh,compFlag)
+function [k,e,mut] = MK(u,k,e,r,mu,ReT,mesh,compFlag,iter)
 
     n        = size(r,1);
     y        = mesh.y;
    	wallDist = min(y, 2-y);
-    tv       = mesh.ddy*u;
+    tv       = (mesh.ddy*u).*mu;
     ut       = sqrt(tv(1)/r(1)/2-tv(end)/r(end)/2);
     Retau    = ReT*ut.*r;
     
     if(compFlag==1)
         yplus = wallDist*Retau.*sqrt(r/r(1))./(mu/mu(1));
     else
-        yplus = wallDist.*ReT;
+        if(iter>200)
+            yplus = wallDist.*Retau;
+        else
+            yplus = wallDist.*ReT;
+        end
     end
 
     % Model constants

@@ -1,8 +1,7 @@
 %       Implementation of the dwx model
 %       Reference,
 %       M. Karcz and J. Badur., "A TURBULENT HEAT FLUX TWO–EQUATION
-%       θ02 –εθ CLOSURE BASED ON THE V2F
-%       TURBULENCE MODEL"
+%       θ02 –εθ CLOSURE BASED ON THE V2F TURBULENCE MODEL"
 %**************************************************************************
 %
 % Conventional models without radiation modifications:
@@ -58,7 +57,6 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,kG,ReT,Pr,
     
     tv       = (mesh.ddy*u).*mu;
     ut       = sqrt(tv(1)./r(1)/2-tv(end)./r(end)/2);
-    %ut       = sqrt(tv(1)./r);
     Retau    = ReT.*ut.*r;
     y        = mesh.y;
    	wallDist = min(y, 2-y);
@@ -94,7 +92,9 @@ function [ lam,t2,et,alphat ] = DWX( T,Em,G,r,u,t2,et,k,e,alpha,mu,kP,kG,ReT,Pr,
     cr33 = 7*(ReT/2900).^(2/2); %/(Pr.^(1./2)); %./r.^(1./4);
     WVN  = ((cr33-cr22).*y.^2 - 2*(cr33-cr22).*y +cr33);
     
-    Cr2  = (kP+kP)*0.5./WVN.*atan(WVN./(kP/2+kP/2));
+    kC = kG./2+kG./2;
+    
+    Cr2  = (kC)./WVN.*atan(WVN./(kC));
 %     
 %     Cr2  = sqrt(kG./WVN.*atan(WVN./kG) .* kP./WVN.*atan(WVN./kP));
        

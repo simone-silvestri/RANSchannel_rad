@@ -60,7 +60,7 @@ function [k,e,mut] = MK(u,k,e,r,mu,ReT,mesh,compFlag,iter)
     Retau    = ReT*ut.*r;
     
     if(compFlag==1)
-        yplus = wallDist*Retau.*sqrt(r/r(1))./(mu/mu(1));
+        yplus = wallDist.*Retau.*sqrt(r/r(1))./(mu/mu(1));
     else
         if(iter>200)
             yplus = wallDist.*Retau;

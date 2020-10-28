@@ -18,9 +18,9 @@ function [ lam, alphat ] = PRT( mu,mut,alpha,T,r,qy,ReT,Pr,Pl,MESH,RadMod)
     else
         Prt = Prt0;
     end
-    alphat = mut./Prt;
+    alphat = mut./Prt./r;
     
-    lam    = alpha + alphat;
+    lam    = alpha + r.*alphat;
     
     
 end

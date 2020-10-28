@@ -1,4 +1,4 @@
-function [I, Sc] = radiation( T, kP, Sc, I_old, ANG, n )
+function [I, Sc] = radiation( T, kP, I_old, ANG, n )
 %function [I] = radiation( T, kP, I_old, ANG, n )
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
@@ -17,7 +17,7 @@ Sc    = zeros(n+1,5,5,ANG.nT,ANG.nP);
 error   = -1000;
 tolclam = 1e-3;
 
-%while (error > tolclam || error < 0)
+while (error > tolclam || error < 0)
     
     error = -1000;
     %start from bottom south west corner
@@ -148,11 +148,11 @@ tolclam = 1e-3;
     Itemp = boundrad(Itemp,ANG,n);
     I_old(:,:,:) = Itemp(:,3,3,:,:);
     
-%    Sc = smart(Itemp,ANG,n);
+   Sc = smart(Itemp,ANG,n);
     
-%    fprintf('inside radiation %e\n',error);
+   fprintf('inside radiation %e\n',error);
 
-%end
+end
 
 I = I_old;
 
@@ -217,10 +217,10 @@ nP     = ANG.nP;
 Pthree = ANG.Pthree;
 Phalf  = ANG.Phalf;
 
-I_new = zeros(n+1,5,5,nT,nP);
+I_new = zeros(n+1,2,2,nT,nP);
 
-for k=1:5
-    for j=1:5
+for k=1:2
+    for j=1:2
         for l=1:nT
             for m=1:Phalf
                 I_new(1,j,k,l,m)=Emiss.west(j,k,l,m);
@@ -232,8 +232,8 @@ for k=1:5
     end
 end
 
-for k=1:5
-    for j=1:5
+for k=1:2
+    for j=1:2
         for l=1:nT
             for m=Phalf+1:Pthree
                 I_new(n+1,j,k,l,m)=Emiss.east(j,k,l,m);
@@ -242,8 +242,8 @@ for k=1:5
     end
 end
 
-for k=1:5
-    for j=1:5
+for k=1:2
+    for j=1:2
         for i=2:n
             for l=1:nT
                 for m=1:nP

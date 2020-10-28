@@ -15,12 +15,12 @@ function [uvd] = velTransVD(uplus,r)
 
     n = size(uplus,1);
     uvd = zeros(n,1);
+   
+    rw = r(1);
+
     uvd(1) = 0;
-    
+
     for i=2:n
-        uvd(i) = uvd(i-1) + sqrt(0.5*(r(i)+r(i-1))/r(1))*(uplus(i)-uplus(i-1));
+        uvd(i) = uvd(i-1) + sqrt(0.5*(r(i)+r(i-1))/rw)*(uplus(i)-uplus(i-1));
     end
-
 end
-
-
